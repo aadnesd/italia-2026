@@ -162,7 +162,7 @@
 <body>
   <div class="header">
     <div class="header-title">🇮🇹 Italia · Verona &amp; Toscana</div>
-    <div class="header-sub">11.–21. juni 2026 · Gardermoen → Verona → Toscana → Firenze</div>
+    <div class="header-sub">12.–21. juni 2026 · Gardermoen → Verona → Toscana → Firenze</div>
     <div class="tab-bar">
       <div class="tab on" onclick="sw('tl',this)">Tidslinje</div>
       <div class="tab" onclick="sw('map',this)">Kart</div>
@@ -176,7 +176,7 @@
 
   <!-- TIMELINE -->
   <div id="v-tl" class="view on">
-    <div class="note">📅 <b>Datoer å bekrefte:</b> Flyet ned (DY 1876) og dagene i Verona har ingen dato i notatene. Faste holdepunkter er Verona→Firenze <b>søn 14. juni</b> og villa/bil fra 14. juni. Her er antatt <b>avreise fre 12. juni</b> (2 netter i Verona) — juster om dere reiser en annen dag.</div>
+    <div class="note">✈️ <b>Avreise lør 13. juni</b> (DY 1876, OSL 07:30 → Malpensa 10:10). Natt før på Gardermoen 12. juni. Da blir det <b>1 natt i Verona</b> (13.→14.) før toget til Firenze 14. juni kl 14:22.</div>
     <div class="tl-strip" id="tl-strip"></div>
     <div class="hotel-strip" id="hotel-strip"></div>
     <div id="day-detail"></div>
@@ -216,46 +216,45 @@
 <script>
 /* ---------------- DATA ---------------- */
 const HOTELS = {
-  thon: { name:"Thon Hotel Gardermoen", addr:"Balder Allé 22, Gardermoen", dates:"11. jun · 1 natt (kvelden før fly)", note:"Sov ut før tidlig avgang. Sjekk gratis/parkering + shuttle til OSL.", maps:"https://maps.google.com/?q=Thon+Hotel+Gardermoen", city:"city4" },
-  catullo:{ name:"Residenza Catullo", addr:"Via Catullo 3, 37121 Verona", dates:"12.–14. jun · 2 netter (antatt)", note:"Midt i gamlebyen, få minutter fra Piazza Erbe og Arena.", maps:"https://maps.google.com/?q=Residenza+Catullo+Via+Catullo+3+Verona", city:"city1" },
+  thon: { name:"Thon Hotel Gardermoen", addr:"Balder Allé 22, Gardermoen", dates:"12. jun · 1 natt (kvelden før fly)", note:"Sov ut før tidlig avgang. Sjekk gratis/parkering + shuttle til OSL.", maps:"https://maps.google.com/?q=Thon+Hotel+Gardermoen", city:"city4" },
+  catullo:{ name:"Residenza Catullo", addr:"Via Catullo 3, 37121 Verona", dates:"13.–14. jun · 1 natt", note:"Midt i gamlebyen, få minutter fra Piazza Erbe og Arena.", maps:"https://maps.google.com/?q=Residenza+Catullo+Via+Catullo+3+Verona", city:"city1" },
   villa:  { name:"Villa i Toscana", addr:"Toscana (Valdarno/Chianti)", dates:"14.–20. jun · 6 netter", note:"Innsjekk fra kl 19:00 den 14., utsjekk 20. juni. Bil nødvendig — landlig beliggenhet.", maps:"https://www.google.com/maps?q=43.45080038752791,11.6831123828887", city:"city2" },
   medici: { name:"Soggiorno Relax Dei Medici", addr:"Via Fiesolana 14, 50122 Firenze", dates:"20.–21. jun · 1 natt", note:"7 voksne, 1 leilighet. Innsjekk 15:00–22:00, utsjekk 10:00. Midt i sentrum nær Duomo.", maps:"https://maps.google.com/?q=Soggiorno+Relax+Dei+Medici+Via+Fiesolana+14+Firenze", city:"city3" }
 };
 
 const DAYS = [
-  { d:"11. jun", wd:"Tor", city:"city4", icon:"🛏️", hotel:"thon", checkin:true, checkout:false,
+  { d:"12. jun", wd:"Fre", city:"city4", icon:"🛏️", hotel:"thon", checkin:true, checkout:false,
     cats:[ { ic:"🛏️", t:"Kvelden før avreise", items:[
-      { n:"Innsjekk Thon Hotel Gardermoen", a:"Gardermoen", tip:"Pakk lett håndbagasje for flyet ned. Bestill shuttle/parkering. Tidlig kveld — avgang 07:30." }
+      { n:"Innsjekk Thon Hotel Gardermoen", a:"Gardermoen", tip:"Pakk lett håndbagasje for flyet ned. Bestill shuttle/parkering. Tidlig kveld — avgang 07:30 i morgen." }
     ]}]
   },
-  { d:"12. jun", wd:"Fre", city:"city1", icon:"✈️", hotel:"catullo", checkin:true, checkout:false,
-    cats:[ { ic:"✈️", t:"Reisedag — Oslo → Verona", items:[
-      { n:"Fly DY 1876 (OSL → Malpensa)", a:"07:30 → 10:10 · T1", tip:"Norwegian, 2 t 40 min. Vær på MXP T1 ankomst rundt 10:10–11:00." },
-      { n:"Buss Terravision → Milano Centrale", a:"11:10 · 50 min direkte", tip:"Fra MXP T1 Coach Station (Floor -1). Kjøp billett på forhånd via Terravision-appen." },
-      { n:"Italo 8983 → Verona Porta Nuova", a:"12:35 → 13:47", tip:"Stopp: Brescia 13:13, Desenzano 13:27. ~35 min bytte på Milano Centrale — ha billetten klar." },
-      { n:"Innsjekk Residenza Catullo", a:"Via Catullo 3", tip:"Legg fra dere bagasjen, så ut i gamlebyen. Aperitivo på Piazza delle Erbe!" }
-    ]}]
-  },
-  { d:"13. jun", wd:"Lør", city:"city1", icon:"🏛️", hotel:"catullo", checkin:false, checkout:false,
+  { d:"13. jun", wd:"Lør", city:"city1", icon:"✈️", hotel:"catullo", checkin:true, checkout:false,
     cats:[
-      { ic:"🏛️", t:"Verona gamleby (alt i gåavstand)", items:[
-        { n:"Arena di Verona", a:"Piazza Bra", tip:"Romersk amfiteater fra år 30. Sjekk om det er opera samme kveld — magisk." },
-        { n:"Piazza delle Erbe & Torre dei Lamberti", a:"sentrum", tip:"Klatre/heis opp tårnet for best utsikt over byen." },
-        { n:"Casa di Giulietta", a:"Via Cappello 23", tip:"Julies balkong. Tidlig morgen for å unngå trengsel." },
-        { n:"Ponte Pietra & Castel San Pietro", a:"elvebredden", tip:"Gå opp til Castel San Pietro ved solnedgang for panorama." }
+      { ic:"✈️", t:"Reisedag — Oslo → Verona", items:[
+        { n:"Fly DY 1876 (OSL → Malpensa)", a:"07:30 → 10:10 · T1", tip:"Norwegian, 2 t 40 min. Vær på MXP T1 ankomst rundt 10:10–11:00." },
+        { n:"Buss Terravision → Milano Centrale", a:"11:10 · 50 min direkte", tip:"Fra MXP T1 Coach Station (Floor -1). Kjøp billett på forhånd via Terravision-appen." },
+        { n:"Italo 8983 → Verona Porta Nuova", a:"12:35 → 13:47", tip:"Stopp: Brescia 13:13, Desenzano 13:27. ~35 min bytte på Milano Centrale — ha billetten klar." },
+        { n:"Innsjekk Residenza Catullo", a:"Via Catullo 3", tip:"Legg fra dere bagasjen, så ut i gamlebyen. Aperitivo på Piazza delle Erbe!" }
       ]},
-      { ic:"🍷", t:"Mat & drikke", items:[
-        { n:"Aperitivo med Amarone", a:"Piazza/elv", tip:"Verona er hjertet av Valpolicella — prøv en Amarone eller Ripasso." }
+      { ic:"🏛️", t:"Verona ettermiddag & kveld", items:[
+        { n:"Arena di Verona & Piazza Bra", a:"sentrum", tip:"Romersk amfiteater fra år 30. Sjekk om det er opera samme kveld — magisk." },
+        { n:"Piazza delle Erbe & Casa di Giulietta", a:"gamlebyen", tip:"Julies balkong + byens vakreste plass, alt i gåavstand." },
+        { n:"Middag med Amarone", a:"gamlebyen", tip:"Verona er hjertet av Valpolicella — prøv en Amarone eller Ripasso." }
       ]}
     ]
   },
   { d:"14. jun", wd:"Søn", city:"city2", icon:"🚆", hotel:"villa", checkin:true, checkout:false,
-    cats:[ { ic:"🚗", t:"Verona → Firenze → Villa", items:[
-      { n:"Italo-tog Verona → Firenze SMN", a:"14:22 → 15:54", tip:"NTV/Italo. Reservert plass — vær på Verona P.N. i god tid." },
-      { n:"Trikk T2 → Firenze flyplass", a:"16:13 → 16:36", tip:"Fra Valfonda (150 m fra SMN) til Peretola Aeroporto, 12 stopp. Billett i Florence-appen eller automat." },
-      { n:"Hent leiebil (Centauro)", a:"FLR · 17:30", tip:"Gå til Centauro-shuttlestoppet utenfor terminalen (hvert 10–15 min) til kontoret. Ta bilder av bilen før avreise." },
-      { n:"Innsjekk villa", a:"fra 19:00", tip:"Handle mat/vin på vei (Conad/Coop) — landlig, lite åpent på søndag kveld." }
-    ]}]
+    cats:[
+      { ic:"🌅", t:"Verona morgen (utsjekk)", items:[
+        { n:"Ponte Pietra & Castel San Pietro", a:"elvebredden", tip:"Kort morgentur opp for panorama før dere drar. Utsjekk Catullo og ta med bagasjen." }
+      ]},
+      { ic:"🚗", t:"Verona → Firenze → Villa", items:[
+        { n:"Italo-tog Verona → Firenze SMN", a:"14:22 → 15:54", tip:"NTV/Italo. Reservert plass — vær på Verona P.N. i god tid med all bagasje." },
+        { n:"Trikk T2 → Firenze flyplass", a:"16:13 → 16:36", tip:"Fra Valfonda (150 m fra SMN) til Peretola Aeroporto, 12 stopp. Billett i Florence-appen eller automat." },
+        { n:"Hent leiebil (Centauro)", a:"FLR · 17:30", tip:"Gå til Centauro-shuttlestoppet utenfor terminalen (hvert 10–15 min) til kontoret. Ta bilder av bilen før avreise." },
+        { n:"Innsjekk villa", a:"fra 19:00", tip:"Handle mat/vin på vei (Conad/Coop) — landlig, lite åpent på søndag kveld." }
+      ]}
+    ]
   },
   { d:"15. jun", wd:"Man", city:"city2", icon:"🏡", hotel:"villa", checkin:false, checkout:false,
     cats:[
@@ -323,24 +322,24 @@ const TPILLS = {
     "Buss Terravision → Milano Centrale": { line:"Italo 8983", detail:"Milano C. → Verona P.N.", time:"1 t 12 min", color:"#B2022F", bg:"#FDE7F0", icon:"🚆", maps:"https://maps.google.com/maps/dir/Milano+Centrale/Verona+Porta+Nuova" },
     "Italo 8983 → Verona Porta Nuova": { line:"Gå / taxi", detail:"Verona P.N. → Residenza Catullo", time:"~10 min", color:"#1B5E20", bg:"#E8F5E9", icon:"🚶", maps:"https://maps.google.com/maps/dir/Verona+Porta+Nuova/Via+Catullo+3+Verona" }
   },
-  3: {
+  2: {
     "Italo-tog Verona → Firenze SMN": { line:"Trikk T2", detail:"Valfonda → Peretola Aeroporto", time:"23 min", color:"#EE7C0E", bg:"#FFF3E0", icon:"🚊", maps:"https://maps.google.com/maps/dir/Firenze+Santa+Maria+Novella/Firenze+Aeroporto+Peretola" },
     "Trikk T2 → Firenze flyplass": { line:"Leiebil", detail:"FLR → villa (Toscana)", time:"~1 t", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps/dir/Firenze+Aeroporto/43.45080038752791,11.6831123828887" },
     "Hent leiebil (Centauro)": { line:"Leiebil", detail:"FLR → villa", time:"~1 t", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps/dir/Firenze+Aeroporto/43.45080038752791,11.6831123828887" }
   },
-  4: {
+  3: {
     "Basseng & frokost på villaen": { line:"Leiebil", detail:"Villa → nærmeste landsby", time:"~15 min", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps?q=43.45080038752791,11.6831123828887" }
   },
-  9: {
+  8: {
     "Sjekk ut villa": { line:"Leiebil", detail:"Villa → Firenze flyplass", time:"~1 t", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps/dir/43.45080038752791,11.6831123828887/Firenze+Aeroporto" },
     "Lever leiebil (Centauro FLR)": { line:"Trikk T2", detail:"Peretola → SMN sentrum", time:"23 min", color:"#EE7C0E", bg:"#FFF3E0", icon:"🚊", maps:"https://maps.google.com/maps/dir/Firenze+Aeroporto+Peretola/Firenze+Santa+Maria+Novella" }
   },
-  10: {
+  9: {
     "Janne & Ådne: tog til Bologna": { line:"Frecciarossa FR 9310", detail:"Firenze SMN → Bologna C.", time:"38 min", color:"#E2001A", bg:"#FDE7E9", icon:"🚄", maps:"https://maps.google.com/maps/dir/Firenze+Santa+Maria+Novella/Bologna+Centrale" }
   }
 };
 
-const segs = [ {k:'thon',n:1}, {k:'catullo',n:2}, {k:'villa',n:6}, {k:'medici',n:1} ];
+const segs = [ {k:'thon',n:1}, {k:'catullo',n:1}, {k:'villa',n:6}, {k:'medici',n:1} ];
 
 const MAPD = {
   milano:  { name:"Milano (transitt)", addr:"Malpensa T1 & Milano Centrale", maps:"https://maps.google.com/?q=Milano+Centrale", c:"city4", lat:45.4862, lng:9.2030 },
@@ -374,7 +373,7 @@ const RESTS = [
 ];
 
 const FLIGHTS = [
-  { who:"Hovedgruppe · ut", a:"OSL", ac:"Oslo Gardermoen", at:"07:30", b:"MXP", bc:"Milano Malpensa T1", bt:"10:10", meta:"DY 1876 · Norwegian · 2 t 40 min. Videre med buss + Italo-tog til Verona (se Transport)." },
+  { who:"Hovedgruppe · ut", a:"OSL", ac:"Oslo Gardermoen", at:"07:30", b:"MXP", bc:"Milano Malpensa T1", bt:"10:10", meta:"DY 1876 · Norwegian · lør 13. juni · 2 t 40 min. Videre med buss + Italo-tog til Verona (se Transport)." },
   { who:"Janne · ut", a:"—", ac:"Ankomst Firenze", at:"23:00", b:"FLR", bc:"Firenze flyplass", bt:"15. jun", meta:"Janne ankommer FLR mandag 15. juni kl 23:00 — hentes med bil fra villaen (~1 t hver vei)." },
   { who:"Mamma & pappa · hjem", a:"FLR", ac:"Firenze", at:"09:25", b:"CPH", bc:"København", bt:"11:40", meta:"21. juni. Bytt i København." },
   { who:"Mamma & pappa · hjem", a:"CPH", ac:"København", at:"13:50", b:"OSL", bc:"Oslo Gardermoen", bt:"15:00", meta:"21. juni · 1 t 10 min. ~2 t 10 min mellomlanding i CPH." },
@@ -566,8 +565,9 @@ function renderSpec(){
 function renderPrac(){
   document.getElementById('v-prac').innerHTML = `
     <div class="prac-sec"><h3>✅ Før avreise</h3><ul class="chk">
-      <li>Bekreft dato for flyet ned + antall netter i Verona</li>
+      <li>Avreise bekreftet: lør 13. juni (DY 1876) · 1 natt i Verona (13.→14.)</li>
       <li>Bekreft eksakt utsjekkstid på villaen (10:00 vs 16:00)</li>
+      <li>Avtal utpekt sjåfør til vinsmakingen på Perelli 18. juni kl 17:00</li>
       <li>Pass gyldig + ev. EU-helsekort (EHIC)</li>
       <li>Last ned billetter: Norwegian, Italo, Terravision, Trenitalia</li>
       <li>Internasjonalt førerkort ikke nødvendig (EØS) — ha fysisk førerkort + kredittkort til leiebil</li>
