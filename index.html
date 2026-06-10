@@ -73,6 +73,7 @@
   .b-out { background:var(--city3-bg); color:var(--city3); border:1px solid var(--city3-bd); }
   .hotel-btn { flex:0 0 auto; font-size:11.5px; text-decoration:none; padding:8px 10px; border-radius:var(--radius-sm); font-weight:600; border:1px solid var(--border); background:var(--bg); color:var(--text); max-width:160px; }
   .hotel-btn .hb-sub { display:block; font-size:10px; color:var(--text3); font-weight:400; margin-top:1px; }
+  .dnote { background:var(--city4-bg); border:1px solid var(--city4-bd); color:var(--text); border-radius:var(--radius-sm); padding:8px 11px; font-size:12.5px; margin:0 0 14px; }
 
   .cat { margin-bottom:18px; }
   .cat-hd { font-size:13px; font-weight:700; color:var(--text2); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
@@ -263,7 +264,7 @@ const DAYS = [
       ]}
     ]
   },
-  { d:"15. jun", wd:"Man", city:"city2", icon:"🏡", hotel:"villa", checkin:false, checkout:false,
+  { d:"15. jun", wd:"Man", city:"city2", icon:"🏡", hotel:"villa", checkin:false, checkout:false, dnote:"💻 Ådne & Janne jobber til kl 15:00 — utflukter starter etter lunsj.",
     cats:[
       { ic:"🏡", t:"Toscana — rolig dag", items:[
         { n:"Basseng & frokost på villaen", a:"hjemme", tip:"Lat morgen. Planlegg ukens utflukter — se Steder-fanen for alle lagrede stopp." },
@@ -274,7 +275,7 @@ const DAYS = [
       ]}
     ]
   },
-  { d:"16. jun", wd:"Tir", city:"city2", icon:"🍷", hotel:"villa", checkin:false, checkout:false,
+  { d:"16. jun", wd:"Tir", city:"city2", icon:"🍷", hotel:"villa", checkin:false, checkout:false, dnote:"💻 Ådne & Janne jobber til kl 15:00 — utflukter starter etter lunsj.",
     cats:[ { ic:"🍇", t:"Dagsutflukt — Chianti Classico", items:[
       { n:"Greve in Chianti", a:"Chianti", tip:"Trekantet torg, Falorni-vinbar og slakterbutikker. Bra start på vinruten." },
       { n:"Antica Macelleria Cecchini (Panzano)", a:"Panzano in Chianti", tip:"Dario Cecchini — Italias mest kjente slakter. Bistecca + show. Book lunsj på forhånd." },
@@ -523,6 +524,7 @@ function pick(i){
       <div><div class="day-title">${d.wd} ${d.d}</div><div class="day-meta">${badges||'&nbsp;'}</div></div>
       ${hotelBtn}
     </div>
+    ${d.dnote?'<div class="dnote">'+d.dnote+'</div>':''}
     ${catsHtml}`;
 }
 
