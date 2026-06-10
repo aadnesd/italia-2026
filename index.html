@@ -167,6 +167,7 @@
       <div class="tab on" onclick="sw('tl',this)">Tidslinje</div>
       <div class="tab" onclick="sw('map',this)">Kart</div>
       <div class="tab" onclick="sw('food',this)">Restauranter</div>
+      <div class="tab" onclick="sw('poi',this)">Steder</div>
       <div class="tab" onclick="sw('fly',this)">Fly</div>
       <div class="tab" onclick="sw('trans',this)">Transport</div>
       <div class="tab" onclick="sw('spec',this)">Mat &amp; vin</div>
@@ -198,6 +199,9 @@
 
   <!-- RESTAURANTS -->
   <div id="v-food" class="view"></div>
+
+  <!-- PLACES -->
+  <div id="v-poi" class="view"></div>
 
   <!-- FLIGHTS -->
   <div id="v-fly" class="view"></div>
@@ -259,8 +263,8 @@ const DAYS = [
   { d:"15. jun", wd:"Man", city:"city2", icon:"🏡", hotel:"villa", checkin:false, checkout:false,
     cats:[
       { ic:"🏡", t:"Toscana — rolig dag", items:[
-        { n:"Basseng & frokost på villaen", a:"hjemme", tip:"Lat morgen. Planlegg ukens utflukter (Siena, Chianti, Arezzo)." },
-        { n:"Nærmeste landsby / vingård", a:"Chianti/Valdarno", tip:"Kort biltur til lokal enoteca for vinsmaking." }
+        { n:"Basseng & frokost på villaen", a:"hjemme", tip:"Lat morgen. Planlegg ukens utflukter — se Steder-fanen for alle lagrede stopp." },
+        { n:"Pieve a Presciano & nærområdet", a:"Valdarno", tip:"Liten landsby like ved villaen — kort tur for en kaffe / lokal vingård." }
       ]},
       { ic:"🌙", t:"Kveld — henting", items:[
         { n:"Hent Janne (FLR 23:00)", a:"Firenze flyplass", tip:"~1 t kjøring hver vei fra villaen. Sen kveldstur — fyll bensin og ha klar P-info på FLR." }
@@ -268,32 +272,36 @@ const DAYS = [
     ]
   },
   { d:"16. jun", wd:"Tir", city:"city2", icon:"🍷", hotel:"villa", checkin:false, checkout:false,
-    cats:[ { ic:"🍇", t:"Utflukt — Chianti", items:[
-      { n:"Greve in Chianti / Castellina", a:"Chianti", tip:"Klassisk vinrute. Stopp på en castello-vingård med booket smaking." },
-      { n:"Lunsj på agriturismo", a:"landsbygda", tip:"Book bord — mange tar kun reservasjoner." }
+    cats:[ { ic:"🍇", t:"Dagsutflukt — Chianti Classico", items:[
+      { n:"Greve in Chianti", a:"Chianti", tip:"Trekantet torg, Falorni-vinbar og slakterbutikker. Bra start på vinruten." },
+      { n:"Antica Macelleria Cecchini (Panzano)", a:"Panzano in Chianti", tip:"Dario Cecchini — Italias mest kjente slakter. Bistecca + show. Book lunsj på forhånd." },
+      { n:"Il Borgo di Vignamaggio", a:"Greve", tip:"Renessansevilla & vingård (Mona Lisa-koblingen). Booket smaking." },
+      { n:"Radda in Chianti", a:"Chianti", tip:"Sjarmerende middelalderlandsby. Evt. innom Antinori nel Chianti Classico (spektakulær arkitektur)." }
     ]}]
   },
   { d:"17. jun", wd:"Ons", city:"city2", icon:"🏰", hotel:"villa", checkin:false, checkout:false,
-    cats:[ { ic:"🏰", t:"Utflukt — Siena", items:[
-      { n:"Piazza del Campo", a:"Siena", tip:"En av Italias vakreste plasser. Klatre Torre del Mangia." },
-      { n:"Duomo di Siena", a:"Siena", tip:"Spektakulær marmorkatedral — kjøp billett på forhånd." }
+    cats:[ { ic:"🏰", t:"Dagsutflukt — Siena (+ Val d'Orcia)", items:[
+      { n:"Siena — Piazza del Campo & Duomo", a:"Siena", tip:"En av Italias vakreste byer. Klatre Torre del Mangia, kjøp Duomo-billett på forhånd." },
+      { n:"Val d'Orcia (valgfritt)", a:"sør", tip:"Vil dere lenger sør: Montalcino (Brunello), Pienza (pecorino), Montepulciano, Monticchiello. Se Steder-fanen." }
     ]}]
   },
   { d:"18. jun", wd:"Tor", city:"city2", icon:"🍷", hotel:"villa", checkin:false, checkout:false,
     cats:[
-      { ic:"🖼️", t:"Dagsutflukt — Arezzo / San Gimignano", items:[
-        { n:"Arezzo", a:"nær villaen", tip:"Antikkmarked, Piazza Grande, Vasari. Mindre turister enn Siena. Vær tilbake i god tid før vinsmakingen kl 17:00." },
-        { n:"San Gimignano", a:"Tårnbyen", tip:"Berømt for middelaldertårn og verdens beste gelato (Dondoli)." }
+      { ic:"🌾", t:"Nær villaen — Valdarno", items:[
+        { n:"Fattoria La Vialla", a:"Castiglion Fibocchi", tip:"Biodynamisk gård — vin, ost, olje. Gratis omvisning/smaking (book på forhånd)." },
+        { n:"Le Cantine de Il Borro", a:"San Giustino Valdarno", tip:"Ferragamos eksklusive vingård og restaurerte landsby. Lunsj eller smaking." }
       ]},
       { ic:"🍷", t:"Vinsmaking — booket!", items:[
         { n:"Vinsmaking på Perelli Winery", a:"17:00", tip:"⭐ BOOKET kl 17:00. ~15 min kjøring fra villaen. Husk: utpekt sjåfør / lite smaking om dere kjører. Ta med kontant til ev. kjøp av flasker." }
       ]}
     ]
   },
-  { d:"19. jun", wd:"Fre", city:"city2", icon:"🏊", hotel:"villa", checkin:false, checkout:false,
-    cats:[ { ic:"🧺", t:"Siste hele dag på villaen", items:[
-      { n:"Basseng, lesing, lang lunsj", a:"hjemme", tip:"Pakk rolig. Spis opp maten — utsjekk i morgen." },
-      { n:"Felles middag på villaen", a:"hjemme", tip:"Grill / pasta-kveld med Chianti før byen igjen." }
+  { d:"19. jun", wd:"Fre", city:"city2", icon:"🏯", hotel:"villa", checkin:false, checkout:false,
+    cats:[ { ic:"🏯", t:"Dagsutflukt — Valdelsa", items:[
+      { n:"San Gimignano", a:"Tårnbyen (UNESCO)", tip:"Middelaldertårn og verdens beste gelato (Dondoli på Piazza della Cisterna)." },
+      { n:"Certaldo Alto", a:"Certaldo", tip:"Boccaccios røde mursteinsby — ta kabelbanen opp til den gamle bydelen." },
+      { n:"Sentierelsa Trail (valgfritt)", a:"Colle di Val d'Elsa", tip:"Vakker elvegjuv-tur med fossefall og badekulper — fint i varmen." },
+      { n:"Felles middag på villaen", a:"hjemme", tip:"Siste kveld på villaen — grill / pasta med Chianti. Pakk rolig før byen i morgen." }
     ]}]
   },
   { d:"20. jun", wd:"Lør", city:"city3", icon:"🎨", hotel:"medici", checkin:true, checkout:true,
@@ -352,6 +360,41 @@ const MAPD = {
 const MAP_COLORS = { city1:"#B91C4A", city2:"#1B5E20", city3:"#E65100", city4:"#0D47A1", perelli:"#6B21A8" };
 const MAP_ORDER = ["milano","verona","firenze","villa","perelli","bologna"];
 const ROUTE = ["milano","verona","firenze","villa"];
+
+/* Lagrede steder å besøke — gruppert etter område */
+const POI_AREAS = [
+  { area:"Chianti Classico", color:"#6A1B9A", day:"Tips: 16. juni", items:[
+    { n:"Antinori nel Chianti Classico", lat:43.6128, lng:11.1938, d:"Spektakulær moderne vingård i åssiden — arkitektur + booket smaking." },
+    { n:"Greve in Chianti", lat:43.6069, lng:11.3320, d:"Trekantet torg, Falorni-vinbar, slakter og vinbutikker." },
+    { n:"Antica Macelleria Cecchini", lat:43.5445, lng:11.3164, d:"Dario Cecchini i Panzano — Italias mest kjente slakter. Book lunsj." },
+    { n:"Il Borgo di Vignamaggio", lat:43.5460, lng:11.3258, d:"Renessansevilla & vingård (Mona Lisa-koblingen)." },
+    { n:"Radda in Chianti", lat:43.4870, lng:11.3747, d:"Sjarmerende middelalderlandsby, hjertet av Chianti Classico." }
+  ]},
+  { area:"Nær villaen — Valdarno", color:"#1B5E20", day:"Tips: 15. & 18. juni", items:[
+    { n:"Perelli Winery", lat:43.4804, lng:11.6029, d:"⭐ Booket vinsmaking 18. juni kl 17:00. ~15 min fra villaen.", maps:"https://maps.app.goo.gl/9SkovPpFEE4FSeZh8" },
+    { n:"Fattoria Migliarina", lat:43.4902, lng:11.6313, d:"Lokal gård/vingård nær Bucine." },
+    { n:"Le Cantine de Il Borro", lat:43.5393, lng:11.7163, d:"Ferragamos eksklusive vingård & restaurerte landsby, San Giustino." },
+    { n:"Fattoria La Vialla", lat:43.5288, lng:11.7801, d:"Biodynamisk gård — vin, ost, olje. Gratis omvisning/smaking (book)." },
+    { n:"Pieve a Presciano", lat:43.4508, lng:11.6711, d:"Liten landsby like ved villaen." }
+  ]},
+  { area:"Valdelsa & vest", color:"#00695C", day:"Tips: 19. juni", items:[
+    { n:"San Gimignano", lat:43.4678, lng:11.0432, d:"Tårnbyen (UNESCO) + Dondoli-gelato på Piazza della Cisterna." },
+    { n:"Certaldo", lat:43.5477, lng:11.0410, d:"Boccaccios røde mursteinsby — kabelbane til Certaldo Alto." },
+    { n:"Castelfalfi", lat:43.5474, lng:10.8573, d:"Middelalderlandsby/golfresort i bølgende åser." },
+    { n:"Sentierelsa Trail", lat:43.4199, lng:11.1324, d:"Vakker elvegjuv-tur med fossefall og badekulper." }
+  ]},
+  { area:"Byer & Val d'Orcia (sør)", color:"#0D47A1", day:"Tips: 17. juni / egen dag", items:[
+    { n:"Siena", lat:43.1672, lng:11.4676, d:"Piazza del Campo & Duomo — en av Italias vakreste byer." },
+    { n:"Cortona", lat:43.2753, lng:11.9851, d:"Åsby (Under the Tuscan Sun) med utsikt over Valdichiana." },
+    { n:"Montalcino", lat:43.0576, lng:11.4903, d:"Brunello-vin, festning, porten til Val d'Orcia." },
+    { n:"Pienza", lat:43.0765, lng:11.6789, d:"Renessanseidealby, berømt pecorino-ost." },
+    { n:"Monticchiello", lat:43.0682, lng:11.7256, d:"Bitteliten murbylandsby, klassisk Val d'Orcia." },
+    { n:"Montepulciano", lat:43.0945, lng:11.7827, d:"Vino Nobile, høytliggende vakker by." }
+  ]},
+  { area:"Firenze", color:"#E65100", day:"20.–21. juni", items:[
+    { n:"All'Antico Vinaio", lat:43.7685, lng:11.2574, d:"Berømte schiacciata-panini i Via dei Neri. Rask, billig, nydelig." }
+  ]}
+];
 
 const RESTS = [
   { sec:"Verona", c:"c1", cls:"verona", items:[
@@ -500,7 +543,31 @@ function initMap(){
     const popup = `<b>${d.name}</b><br>${d.addr}${d.dates?'<br>'+d.dates:''}${d.note?'<br><span style="color:#555">💡 '+d.note+'</span>':''}<br><a class="pop-link" href="${d.maps}" target="_blank">Åpne i Google Maps ↗</a>`;
     L.marker([d.lat, d.lng], { icon }).addTo(_map).bindPopup(popup);
   });
+  // saved places (POIs) — smaller dots, area-coloured
+  POI_AREAS.forEach(grp=>{
+    grp.items.forEach(p=>{
+      const mp = p.maps || ('https://www.google.com/maps/search/?api=1&query='+p.lat+','+p.lng);
+      const icon = L.divIcon({ className:'', iconSize:[14,14], iconAnchor:[7,7],
+        html:`<div style="width:14px;height:14px;border-radius:50%;background:${grp.color};border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.4)"></div>` });
+      const popup = `<b>${p.n}</b><br><span style="color:${grp.color};font-weight:600">${grp.area}</span><br><span style="color:#555">${p.d}</span><br><a class="pop-link" href="${mp}" target="_blank">Åpne i Google Maps ↗</a>`;
+      L.marker([p.lat, p.lng], { icon }).addTo(_map).bindPopup(popup);
+    });
+  });
   _map.fitBounds(bounds, { padding:[40,40] });
+}
+
+function renderPOI(){
+  document.getElementById('v-poi').innerHTML = `<div class="note">📍 <b>Lagrede steder</b> — alle vises som fargede prikker i Kart-fanen. Tips om hvilken dag de passer står under hvert område.</div>` +
+    POI_AREAS.map(g=>`
+      <div class="sec-title" style="color:${g.color}">${g.area} <span style="color:var(--text3);font-weight:500;text-transform:none;letter-spacing:0"> · ${g.day}</span></div>
+      ${g.items.map(p=>{
+        const mp = p.maps || ('https://www.google.com/maps/search/?api=1&query='+p.lat+','+p.lng);
+        return `<div class="rest-card" style="border-left:4px solid ${g.color}">
+          <div class="rest-name">${p.n}</div>
+          <div class="rest-desc">${p.d}</div>
+          <a class="rest-link" href="${mp}" target="_blank">📍 Google Maps ↗</a>
+        </div>`;
+      }).join('')}`).join('');
 }
 
 function renderFood(){
@@ -601,7 +668,7 @@ function renderPrac(){
     </ul></div>`;
 }
 
-renderTL(); pick(0); renderFood(); renderFly(); renderTrans(); renderSpec(); renderPrac();
+renderTL(); pick(0); renderFood(); renderPOI(); renderFly(); renderTrans(); renderSpec(); renderPrac();
 </script>
 </body>
 </html>
