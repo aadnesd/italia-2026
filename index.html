@@ -7,6 +7,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Italia 2026">
 <title>Italia · Verona & Toscana · Juni 2026</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23ffffff'/%3E%3Crect width='1' height='2' fill='%23009246'/%3E%3Crect x='2' width='1' height='2' fill='%23CE2B37'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='3' height='2' fill='%23ffffff'/%3E%3Crect width='1' height='2' fill='%23009246'/%3E%3Crect x='2' width='1' height='2' fill='%23CE2B37'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <style>
@@ -250,7 +252,8 @@ const DAYS = [
   { d:"14. jun", wd:"Søn", city:"city2", icon:"🚆", hotel:"villa", checkin:true, checkout:false,
     cats:[
       { ic:"🌅", t:"Verona morgen (utsjekk)", items:[
-        { n:"Ponte Pietra & Castel San Pietro", a:"elvebredden", tip:"Kort morgentur opp for panorama før dere drar. Utsjekk Catullo og ta med bagasjen." }
+        { n:"Liten frokost på café", a:"gamlebyen", tip:"Cappuccino + cornetto på en bar i sentrum før dagen starter." },
+        { n:"Arena di Verona — omvisning", a:"Piazza Bra · booket billett", tip:"⭐ Inngangsbillett/omvisning i det romerske amfiteateret. Gå opp på tribunene for utsikten. Sjekk ut Catullo og ta med bagasjen før dere drar." }
       ]},
       { ic:"🚗", t:"Verona → Firenze → Villa", items:[
         { n:"Italo-tog Verona → Firenze SMN", a:"14:22 → 15:54", tip:"NTV/Italo. Reservert plass — vær på Verona P.N. i god tid med all bagasje." },
@@ -331,6 +334,8 @@ const TPILLS = {
     "Italo 8983 → Verona Porta Nuova": { line:"Gå / taxi", detail:"Verona P.N. → Residenza Catullo", time:"~10 min", color:"#1B5E20", bg:"#E8F5E9", icon:"🚶", maps:"https://maps.google.com/maps/dir/Verona+Porta+Nuova/Via+Catullo+3+Verona" }
   },
   2: {
+    "Liten frokost på café": { line:"Gå", detail:"Café → Arena di Verona", time:"~5 min", color:"#1B5E20", bg:"#E8F5E9", icon:"🚶", maps:"https://maps.google.com/maps/dir/Piazza+delle+Erbe+Verona/Arena+di+Verona" },
+    "Arena di Verona — omvisning": { line:"Gå / taxi", detail:"Arena → Verona Porta Nuova", time:"~15 min", color:"#1B5E20", bg:"#E8F5E9", icon:"🚶", maps:"https://maps.google.com/maps/dir/Arena+di+Verona/Verona+Porta+Nuova" },
     "Italo-tog Verona → Firenze SMN": { line:"Trikk T2", detail:"Valfonda → Peretola Aeroporto", time:"23 min", color:"#EE7C0E", bg:"#FFF3E0", icon:"🚊", maps:"https://maps.google.com/maps/dir/Firenze+Santa+Maria+Novella/Firenze+Aeroporto+Peretola" },
     "Trikk T2 → Firenze flyplass": { line:"Leiebil", detail:"FLR → villa (Toscana)", time:"~1 t", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps/dir/Firenze+Aeroporto/43.45080038752791,11.6831123828887" },
     "Hent leiebil (Centauro)": { line:"Leiebil", detail:"FLR → villa", time:"~1 t", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps/dir/Firenze+Aeroporto/43.45080038752791,11.6831123828887" }
