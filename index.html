@@ -384,7 +384,7 @@ const POI_AREAS = [
   ]},
   { area:"Valdelsa & vest", color:"#00695C", day:"Tips: 19. juni", items:[
     { n:"San Gimignano", lat:43.4678, lng:11.0432, d:"Tårnbyen (UNESCO) + Dondoli-gelato på Piazza della Cisterna." },
-    { n:"Certaldo", lat:43.5477, lng:11.0410, d:"Boccaccios røde mursteinsby — kabelbane til Certaldo Alto." },
+    { n:"Certaldo", lat:43.5477, lng:11.0410, d:"Boccaccios røde mursteinsby — kabelbane til Certaldo Alto.", maps:"https://maps.app.goo.gl/jDimhKzkqzhhzVfQ7" },
     { n:"Castelfalfi", lat:43.5474, lng:10.8573, d:"Middelalderlandsby/golfresort i bølgende åser." },
     { n:"Sentierelsa Trail", lat:43.4199, lng:11.1324, d:"Vakker elvegjuv-tur med fossefall og badekulper." }
   ]},
@@ -527,6 +527,9 @@ function pick(i){
 }
 
 let _map = null;
+function poiMaps(p){
+  return p.maps || ('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.n + ', Toscana, Italia'));
+}
 function initMap(){
   if(_map || typeof L === 'undefined') { if(_map) _map.invalidateSize(); return; }
   _map = L.map('leaflet-map', { scrollWheelZoom:false }).setView([44.4, 11.1], 6);
@@ -551,7 +554,7 @@ function initMap(){
   // saved places (POIs) — smaller dots, area-coloured
   POI_AREAS.forEach(grp=>{
     grp.items.forEach(p=>{
-      const mp = p.maps || ('https://www.google.com/maps/search/?api=1&query='+p.lat+','+p.lng);
+      const mp = poiMaps(p);
       const icon = L.divIcon({ className:'', iconSize:[14,14], iconAnchor:[7,7],
         html:`<div style="width:14px;height:14px;border-radius:50%;background:${grp.color};border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.4)"></div>` });
       const popup = `<b>${p.n}</b><br><span style="color:${grp.color};font-weight:600">${grp.area}</span><br><span style="color:#555">${p.d}</span><br><a class="pop-link" href="${mp}" target="_blank">Åpne i Google Maps ↗</a>`;
@@ -566,7 +569,7 @@ function renderPOI(){
     POI_AREAS.map(g=>`
       <div class="sec-title" style="color:${g.color}">${g.area} <span style="color:var(--text3);font-weight:500;text-transform:none;letter-spacing:0"> · ${g.day}</span></div>
       ${g.items.map(p=>{
-        const mp = p.maps || ('https://www.google.com/maps/search/?api=1&query='+p.lat+','+p.lng);
+        const mp = poiMaps(p);
         return `<div class="rest-card" style="border-left:4px solid ${g.color}">
           <div class="rest-name">${p.n}</div>
           <div class="rest-desc">${p.d}</div>
