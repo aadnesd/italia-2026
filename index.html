@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Italia 2026">
+<title>Italia · Verona & Toscana · Juni 2026</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<style>
+  :root {
+    --text: #1a1a1a; --text2: #555; --text3: #888;
+    --border: #e0e0e0; --border2: #bbb;
+    --bg: #fff; --bg2: #f7f7f5; --bg3: #f0f0ee;
+    --radius: 10px; --radius-sm: 6px;
+    --shadow: 0 1px 4px rgba(0,0,0,0.08);
+    /* Verona — rose */
+    --city1: #B91C4A; --city1-bg: #FDE7F0; --city1-bd: #E879A0;
+    /* Toscana / villa — green */
+    --city2: #1B5E20; --city2-bg: #E8F5E9; --city2-bd: #43A047;
+    /* Firenze — amber */
+    --city3: #E65100; --city3-bg: #FFF3E0; --city3-bd: #F9A825;
+    /* Reise / hub — blue */
+    --city4: #0D47A1; --city4-bg: #E3F2FD; --city4-bd: #1E88E5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text: #f0f0f0; --text2: #aaa; --text3: #777;
+      --border: #333; --border2: #555;
+      --bg: #1a1a1a; --bg2: #242424; --bg3: #2e2e2e;
+      --city1-bg: #2a141c; --city2-bg: #14241a; --city3-bg: #2a1e10; --city4-bg: #11203a;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg2); color:var(--text); font-size:15px; line-height:1.45; }
+  a { color:inherit; }
+
+  .header { background:var(--bg); border-bottom:1px solid var(--border); padding:14px 16px 0; position:sticky; top:0; z-index:100; }
+  .header-title { font-size:17px; font-weight:600; }
+  .header-sub { font-size:12px; color:var(--text3); margin-top:1px; }
+  .tab-bar { display:flex; gap:4px; overflow-x:auto; padding-bottom:1px; margin-top:10px; scrollbar-width:none; }
+  .tab-bar::-webkit-scrollbar { display:none; }
+  .tab { padding:7px 14px; font-size:13px; border-radius:20px 20px 0 0; border:1px solid var(--border); border-bottom:none; cursor:pointer; background:var(--bg3); color:var(--text2); white-space:nowrap; font-weight:500; transition:all 0.15s; user-select:none; }
+  .tab.on { background:var(--bg); color:var(--text); }
+  .view { display:none; padding:16px; max-width:600px; margin:0 auto; }
+  .view.on { display:block; }
+
+  .note { background:var(--city4-bg); border:1px solid var(--city4-bd); color:var(--text); border-radius:var(--radius); padding:10px 12px; font-size:12.5px; margin-bottom:14px; }
+  .note b { color:var(--city4); }
+
+  /* Timeline */
+  .tl-strip { display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; scrollbar-width:none; }
+  .tl-strip::-webkit-scrollbar { display:none; }
+  .tl-cell { flex:0 0 auto; min-width:62px; text-align:center; padding:8px 6px; border-radius:var(--radius); border:1px solid var(--border); background:var(--bg); cursor:pointer; transition:all .15s; }
+  .tl-cell.sel { box-shadow:0 0 0 2px var(--text) inset; }
+  .tl-cell .wd { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.04em; }
+  .tl-cell .dt { font-size:13px; font-weight:600; margin-top:1px; }
+  .tl-cell .ic { font-size:16px; margin-top:2px; }
+
+  .hotel-strip { display:flex; gap:4px; overflow-x:auto; margin:10px 0 16px; scrollbar-width:none; }
+  .hotel-strip::-webkit-scrollbar { display:none; }
+  .hseg { flex:0 0 auto; border-radius:var(--radius-sm); padding:7px 9px; font-size:11px; color:#fff; cursor:pointer; display:flex; flex-direction:column; justify-content:center; }
+
+  .day-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:12px; }
+  .day-title { font-size:18px; font-weight:700; }
+  .day-meta { font-size:12.5px; color:var(--text3); margin-top:2px; }
+  .badge { display:inline-block; font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:20px; margin-right:5px; }
+  .b-in { background:var(--city2-bg); color:var(--city2); border:1px solid var(--city2-bd); }
+  .b-out { background:var(--city3-bg); color:var(--city3); border:1px solid var(--city3-bd); }
+  .hotel-btn { flex:0 0 auto; font-size:11.5px; text-decoration:none; padding:8px 10px; border-radius:var(--radius-sm); font-weight:600; border:1px solid var(--border); background:var(--bg); color:var(--text); max-width:160px; }
+  .hotel-btn .hb-sub { display:block; font-size:10px; color:var(--text3); font-weight:400; margin-top:1px; }
+
+  .cat { margin-bottom:18px; }
+  .cat-hd { font-size:13px; font-weight:700; color:var(--text2); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .act { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:11px 13px; margin-bottom:8px; box-shadow:var(--shadow); }
+  .act-n { font-weight:600; font-size:14.5px; }
+  .act-a { font-size:11.5px; color:var(--text3); margin-top:1px; }
+  .act-tip { background:var(--bg2); border-left:3px solid var(--city3-bd); padding:7px 10px; border-radius:var(--radius-sm); font-size:12.5px; margin-top:8px; color:var(--text2); }
+  .act-time { font-size:11px; font-weight:700; color:var(--city4); }
+
+  .trans-pill { display:flex; align-items:center; gap:7px; text-decoration:none; padding:6px 11px; border-radius:20px; font-size:11.5px; font-weight:500; border:1px solid; margin:2px 0 8px 14px; width:fit-content; }
+
+  /* Map */
+  .map-outer { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:8px; }
+  .map-svg { width:100%; height:auto; display:block; }
+  #leaflet-map { width:100%; height:440px; border-radius:var(--radius); z-index:0; }
+  .leaflet-popup-content { font-family:inherit; font-size:13px; }
+  .leaflet-popup-content b { font-size:14px; }
+  .pop-link { display:inline-block; margin-top:6px; font-weight:600; color:#0D47A1; text-decoration:none; }
+  .map-legend { display:flex; flex-wrap:wrap; gap:10px; margin:14px 0; font-size:12px; }
+  .map-legend span { display:flex; align-items:center; gap:5px; }
+  .lg-dot { width:11px; height:11px; border-radius:50%; display:inline-block; }
+  #map-card .mc { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); }
+  .mc-name { font-weight:700; font-size:15px; }
+  .mc-addr { font-size:12.5px; color:var(--text3); margin:3px 0 8px; }
+  .maps-link { display:inline-block; text-decoration:none; padding:8px 12px; border-radius:var(--radius-sm); font-size:12.5px; font-weight:600; border:1px solid var(--city4-bd); background:var(--city4-bg); color:var(--city4); margin-top:6px; }
+
+  /* Restaurants */
+  .rest-card { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:13px; margin-bottom:11px; box-shadow:var(--shadow); position:relative; }
+  .rest-must { border:1px solid var(--city3-bd); }
+  .rest-must-badge { position:absolute; top:-9px; right:11px; background:var(--city3); color:#fff; font-size:10.5px; font-weight:700; padding:2px 9px; border-radius:20px; }
+  .rest-name { font-weight:700; font-size:15.5px; }
+  .rest-city { display:inline-block; font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:20px; margin:5px 0; }
+  .c1 { background:var(--city1-bg); color:var(--city1); border:1px solid var(--city1-bd); }
+  .c2 { background:var(--city2-bg); color:var(--city2); border:1px solid var(--city2-bd); }
+  .c3 { background:var(--city3-bg); color:var(--city3); border:1px solid var(--city3-bd); }
+  .rest-type { font-size:12px; color:var(--text3); margin-bottom:5px; }
+  .rest-desc { font-size:13px; color:var(--text2); }
+  .rest-order { background:var(--bg2); border-left:3px solid var(--city3-bd); padding:7px 10px; border-radius:var(--radius-sm); font-size:12.5px; margin-top:8px; }
+  .rest-link { display:inline-block; margin-top:8px; font-size:12px; font-weight:600; color:var(--city4); text-decoration:none; }
+  .sec-title { font-size:13px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:.05em; margin:22px 0 10px; }
+
+  /* Flights */
+  .fly-card { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:14px; margin-bottom:12px; box-shadow:var(--shadow); }
+  .fly-route { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .fly-ap { text-align:center; }
+  .fly-code { font-size:20px; font-weight:800; }
+  .fly-city { font-size:11px; color:var(--text3); }
+  .fly-time { font-size:14px; font-weight:700; margin-top:2px; }
+  .fly-mid { flex:1; text-align:center; font-size:11px; color:var(--text3); }
+  .fly-mid .line { border-top:2px dashed var(--border2); margin:6px 4px 4px; position:relative; }
+  .fly-meta { font-size:12px; color:var(--text2); margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+  .fly-who { display:inline-block; font-size:10.5px; font-weight:700; padding:2px 9px; border-radius:20px; background:var(--bg3); color:var(--text2); margin-bottom:8px; }
+
+  /* Transport */
+  .leg-card { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:11px; box-shadow:var(--shadow); overflow:hidden; }
+  .leg-header { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:13px; cursor:pointer; }
+  .leg-route { font-weight:700; font-size:14.5px; }
+  .leg-sub { font-size:11.5px; color:var(--text3); margin-top:1px; }
+  .leg-right { display:flex; flex-direction:column; align-items:flex-end; gap:3px; }
+  .mode-pill { font-size:10.5px; font-weight:600; padding:2px 9px; border-radius:20px; white-space:nowrap; }
+  .dur { font-size:11px; color:var(--text3); }
+  .leg-chev { font-size:13px; color:var(--text3); transition:transform .2s; }
+  .leg-chev.open { transform:rotate(180deg); }
+  .leg-body { max-height:0; overflow:hidden; transition:max-height .25s ease; }
+  .leg-body.open { max-height:900px; }
+  .leg-inner { padding:0 13px 13px; }
+  .lstep { display:flex; gap:10px; }
+  .lstep-line { display:flex; flex-direction:column; align-items:center; }
+  .lstep-dot { width:10px; height:10px; border-radius:50%; background:var(--city4); margin-top:4px; }
+  .lstep-conn { flex:1; width:2px; background:var(--border); margin:2px 0; }
+  .lstep-body { padding-bottom:14px; }
+  .lstep-station { font-weight:600; font-size:13.5px; }
+  .lstep-detail { font-size:12px; color:var(--text2); margin-top:1px; }
+  .lstep-exit { display:inline-block; font-size:11px; background:var(--bg2); padding:2px 8px; border-radius:var(--radius-sm); margin-top:4px; color:var(--text2); }
+  .trans-cost { font-size:12.5px; margin-top:8px; }
+
+  /* Specialities + Practical */
+  .spec-card, .prac-sec { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:14px; margin-bottom:11px; box-shadow:var(--shadow); }
+  .spec-card h3, .prac-sec h3 { margin:0 0 6px; font-size:15px; }
+  .spec-card p, .prac-sec p { margin:4px 0; font-size:13px; color:var(--text2); }
+  .prac-sec ul { margin:6px 0 0; padding-left:18px; }
+  .prac-sec li { font-size:13px; color:var(--text2); margin-bottom:5px; }
+  .chk { list-style:none; padding-left:0; }
+  .chk li { padding-left:26px; position:relative; }
+  .chk li:before { content:"☐"; position:absolute; left:0; font-size:15px; color:var(--text3); }
+  .footer { text-align:center; font-size:11px; color:var(--text3); padding:24px 0 40px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-title">🇮🇹 Italia · Verona &amp; Toscana</div>
+    <div class="header-sub">11.–21. juni 2026 · Gardermoen → Verona → Toscana → Firenze</div>
+    <div class="tab-bar">
+      <div class="tab on" onclick="sw('tl',this)">Tidslinje</div>
+      <div class="tab" onclick="sw('map',this)">Kart</div>
+      <div class="tab" onclick="sw('food',this)">Restauranter</div>
+      <div class="tab" onclick="sw('fly',this)">Fly</div>
+      <div class="tab" onclick="sw('trans',this)">Transport</div>
+      <div class="tab" onclick="sw('spec',this)">Mat &amp; vin</div>
+      <div class="tab" onclick="sw('prac',this)">Praktisk</div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div id="v-tl" class="view on">
+    <div class="note">📅 <b>Datoer å bekrefte:</b> Flyet ned (DY 1876) og dagene i Verona har ingen dato i notatene. Faste holdepunkter er Verona→Firenze <b>søn 14. juni</b> og villa/bil fra 14. juni. Her er antatt <b>avreise fre 12. juni</b> (2 netter i Verona) — juster om dere reiser en annen dag.</div>
+    <div class="tl-strip" id="tl-strip"></div>
+    <div class="hotel-strip" id="hotel-strip"></div>
+    <div id="day-detail"></div>
+  </div>
+
+  <!-- MAP -->
+  <div id="v-map" class="view">
+    <div class="map-outer">
+      <div id="leaflet-map"></div>
+    </div>
+    <div class="map-legend">
+      <span><i class="lg-dot" style="background:var(--city1)"></i> Verona</span>
+      <span><i class="lg-dot" style="background:var(--city2)"></i> Toscana / villa</span>
+      <span><i class="lg-dot" style="background:var(--city3)"></i> Firenze</span>
+      <span><i class="lg-dot" style="background:var(--city4)"></i> Transitt</span>
+      <span><i class="lg-dot" style="background:#6B21A8"></i> Vinsmaking</span>
+    </div>
+  </div>
+
+  <!-- RESTAURANTS -->
+  <div id="v-food" class="view"></div>
+
+  <!-- FLIGHTS -->
+  <div id="v-fly" class="view"></div>
+
+  <!-- TRANSPORT -->
+  <div id="v-trans" class="view"></div>
+
+  <!-- SPECIALITIES -->
+  <div id="v-spec" class="view"></div>
+
+  <!-- PRACTICAL -->
+  <div id="v-prac" class="view"></div>
+
+  <div class="footer">Laget for turen · juni 2026 · alt fungerer offline unntatt kartet (OpenStreetMap krever nett)</div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const HOTELS = {
+  thon: { name:"Thon Hotel Gardermoen", addr:"Balder Allé 22, Gardermoen", dates:"11. jun · 1 natt (kvelden før fly)", note:"Sov ut før tidlig avgang. Sjekk gratis/parkering + shuttle til OSL.", maps:"https://maps.google.com/?q=Thon+Hotel+Gardermoen", city:"city4" },
+  catullo:{ name:"Residenza Catullo", addr:"Via Catullo 3, 37121 Verona", dates:"12.–14. jun · 2 netter (antatt)", note:"Midt i gamlebyen, få minutter fra Piazza Erbe og Arena.", maps:"https://maps.google.com/?q=Residenza+Catullo+Via+Catullo+3+Verona", city:"city1" },
+  villa:  { name:"Villa i Toscana", addr:"Toscana (Valdarno/Chianti)", dates:"14.–20. jun · 6 netter", note:"Innsjekk fra kl 19:00 den 14., utsjekk 20. juni. Bil nødvendig — landlig beliggenhet.", maps:"https://www.google.com/maps?q=43.45080038752791,11.6831123828887", city:"city2" },
+  medici: { name:"Soggiorno Relax Dei Medici", addr:"Via Fiesolana 14, 50122 Firenze", dates:"20.–21. jun · 1 natt", note:"7 voksne, 1 leilighet. Innsjekk 15:00–22:00, utsjekk 10:00. Midt i sentrum nær Duomo.", maps:"https://maps.google.com/?q=Soggiorno+Relax+Dei+Medici+Via+Fiesolana+14+Firenze", city:"city3" }
+};
+
+const DAYS = [
+  { d:"11. jun", wd:"Tor", city:"city4", icon:"🛏️", hotel:"thon", checkin:true, checkout:false,
+    cats:[ { ic:"🛏️", t:"Kvelden før avreise", items:[
+      { n:"Innsjekk Thon Hotel Gardermoen", a:"Gardermoen", tip:"Pakk lett håndbagasje for flyet ned. Bestill shuttle/parkering. Tidlig kveld — avgang 07:30." }
+    ]}]
+  },
+  { d:"12. jun", wd:"Fre", city:"city1", icon:"✈️", hotel:"catullo", checkin:true, checkout:false,
+    cats:[ { ic:"✈️", t:"Reisedag — Oslo → Verona", items:[
+      { n:"Fly DY 1876 (OSL → Malpensa)", a:"07:30 → 10:10 · T1", tip:"Norwegian, 2 t 40 min. Vær på MXP T1 ankomst rundt 10:10–11:00." },
+      { n:"Buss Terravision → Milano Centrale", a:"11:10 · 50 min direkte", tip:"Fra MXP T1 Coach Station (Floor -1). Kjøp billett på forhånd via Terravision-appen." },
+      { n:"Italo 8983 → Verona Porta Nuova", a:"12:35 → 13:47", tip:"Stopp: Brescia 13:13, Desenzano 13:27. ~35 min bytte på Milano Centrale — ha billetten klar." },
+      { n:"Innsjekk Residenza Catullo", a:"Via Catullo 3", tip:"Legg fra dere bagasjen, så ut i gamlebyen. Aperitivo på Piazza delle Erbe!" }
+    ]}]
+  },
+  { d:"13. jun", wd:"Lør", city:"city1", icon:"🏛️", hotel:"catullo", checkin:false, checkout:false,
+    cats:[
+      { ic:"🏛️", t:"Verona gamleby (alt i gåavstand)", items:[
+        { n:"Arena di Verona", a:"Piazza Bra", tip:"Romersk amfiteater fra år 30. Sjekk om det er opera samme kveld — magisk." },
+        { n:"Piazza delle Erbe & Torre dei Lamberti", a:"sentrum", tip:"Klatre/heis opp tårnet for best utsikt over byen." },
+        { n:"Casa di Giulietta", a:"Via Cappello 23", tip:"Julies balkong. Tidlig morgen for å unngå trengsel." },
+        { n:"Ponte Pietra & Castel San Pietro", a:"elvebredden", tip:"Gå opp til Castel San Pietro ved solnedgang for panorama." }
+      ]},
+      { ic:"🍷", t:"Mat & drikke", items:[
+        { n:"Aperitivo med Amarone", a:"Piazza/elv", tip:"Verona er hjertet av Valpolicella — prøv en Amarone eller Ripasso." }
+      ]}
+    ]
+  },
+  { d:"14. jun", wd:"Søn", city:"city2", icon:"🚆", hotel:"villa", checkin:true, checkout:false,
+    cats:[ { ic:"🚗", t:"Verona → Firenze → Villa", items:[
+      { n:"Italo-tog Verona → Firenze SMN", a:"14:22 → 15:54", tip:"NTV/Italo. Reservert plass — vær på Verona P.N. i god tid." },
+      { n:"Trikk T2 → Firenze flyplass", a:"16:13 → 16:36", tip:"Fra Valfonda (150 m fra SMN) til Peretola Aeroporto, 12 stopp. Billett i Florence-appen eller automat." },
+      { n:"Hent leiebil (Centauro)", a:"FLR · 17:30", tip:"Gå til Centauro-shuttlestoppet utenfor terminalen (hvert 10–15 min) til kontoret. Ta bilder av bilen før avreise." },
+      { n:"Innsjekk villa", a:"fra 19:00", tip:"Handle mat/vin på vei (Conad/Coop) — landlig, lite åpent på søndag kveld." }
+    ]}]
+  },
+  { d:"15. jun", wd:"Man", city:"city2", icon:"🏡", hotel:"villa", checkin:false, checkout:false,
+    cats:[
+      { ic:"🏡", t:"Toscana — rolig dag", items:[
+        { n:"Basseng & frokost på villaen", a:"hjemme", tip:"Lat morgen. Planlegg ukens utflukter (Siena, Chianti, Arezzo)." },
+        { n:"Nærmeste landsby / vingård", a:"Chianti/Valdarno", tip:"Kort biltur til lokal enoteca for vinsmaking." }
+      ]},
+      { ic:"🌙", t:"Kveld — henting", items:[
+        { n:"Hent Janne (FLR 23:00)", a:"Firenze flyplass", tip:"~1 t kjøring hver vei fra villaen. Sen kveldstur — fyll bensin og ha klar P-info på FLR." }
+      ]}
+    ]
+  },
+  { d:"16. jun", wd:"Tir", city:"city2", icon:"🍷", hotel:"villa", checkin:false, checkout:false,
+    cats:[ { ic:"🍇", t:"Utflukt — Chianti", items:[
+      { n:"Greve in Chianti / Castellina", a:"Chianti", tip:"Klassisk vinrute. Stopp på en castello-vingård med booket smaking." },
+      { n:"Lunsj på agriturismo", a:"landsbygda", tip:"Book bord — mange tar kun reservasjoner." }
+    ]}]
+  },
+  { d:"17. jun", wd:"Ons", city:"city2", icon:"🏰", hotel:"villa", checkin:false, checkout:false,
+    cats:[ { ic:"🏰", t:"Utflukt — Siena", items:[
+      { n:"Piazza del Campo", a:"Siena", tip:"En av Italias vakreste plasser. Klatre Torre del Mangia." },
+      { n:"Duomo di Siena", a:"Siena", tip:"Spektakulær marmorkatedral — kjøp billett på forhånd." }
+    ]}]
+  },
+  { d:"18. jun", wd:"Tor", city:"city2", icon:"🍷", hotel:"villa", checkin:false, checkout:false,
+    cats:[
+      { ic:"🖼️", t:"Dagsutflukt — Arezzo / San Gimignano", items:[
+        { n:"Arezzo", a:"nær villaen", tip:"Antikkmarked, Piazza Grande, Vasari. Mindre turister enn Siena. Vær tilbake i god tid før vinsmakingen kl 17:00." },
+        { n:"San Gimignano", a:"Tårnbyen", tip:"Berømt for middelaldertårn og verdens beste gelato (Dondoli)." }
+      ]},
+      { ic:"🍷", t:"Vinsmaking — booket!", items:[
+        { n:"Vinsmaking på Perelli Winery", a:"17:00", tip:"⭐ BOOKET kl 17:00. ~15 min kjøring fra villaen. Husk: utpekt sjåfør / lite smaking om dere kjører. Ta med kontant til ev. kjøp av flasker." }
+      ]}
+    ]
+  },
+  { d:"19. jun", wd:"Fre", city:"city2", icon:"🏊", hotel:"villa", checkin:false, checkout:false,
+    cats:[ { ic:"🧺", t:"Siste hele dag på villaen", items:[
+      { n:"Basseng, lesing, lang lunsj", a:"hjemme", tip:"Pakk rolig. Spis opp maten — utsjekk i morgen." },
+      { n:"Felles middag på villaen", a:"hjemme", tip:"Grill / pasta-kveld med Chianti før byen igjen." }
+    ]}]
+  },
+  { d:"20. jun", wd:"Lør", city:"city3", icon:"🎨", hotel:"medici", checkin:true, checkout:true,
+    cats:[ { ic:"🚗", t:"Villa → Firenze sentrum", items:[
+      { n:"Sjekk ut villa", a:"innen kl 16:00", tip:"Bekreft eksakt utsjekkstid med vert (notatene sier både 10:00 og 16:00)." },
+      { n:"Lever leiebil (Centauro FLR)", a:"15:00", tip:"Samme sted som henting. Fyll bensin, ta bilder, behold kvittering for skade-sjekk." },
+      { n:"Innsjekk Soggiorno Relax Dei Medici", a:"Via Fiesolana 14", tip:"Innsjekk 15:00–22:00. Fra flyplass: trikk T2 inn til SMN, så gå/taxi." }
+    ]},
+    { ic:"🏙️", t:"Firenze kveld", items:[
+      { n:"Duomo & Piazza della Signoria", a:"sentrum", tip:"Kveldsvandring. Ponte Vecchio i solnedgang." },
+      { n:"Siste italienske middag", a:"sentrum", tip:"Book bord (se Restauranter). Pakk for tidlige avganger i morgen." }
+    ]}]
+  },
+  { d:"21. jun", wd:"Søn", city:"city4", icon:"🏠", hotel:null, checkin:false, checkout:true,
+    cats:[ { ic:"🏠", t:"Hjemreise — to grupper", items:[
+      { n:"Mamma & pappa: fly via København", a:"FLR → CPH → OSL", tip:"FLR–CPH 09:25–11:40, CPH–OSL 13:50–15:00. Reis tidlig til FLR (utsjekk 10:00)." },
+      { n:"Janne & Ådne: tog til Bologna", a:"SMN → Bologna", tip:"FR 9310 Firenze SMN 12:10 → Bologna 12:48. Lang dag i Bologna før kveldsfly." },
+      { n:"Janne & Ådne: fly hjem", a:"DY 1863 BLQ → OSL", tip:"Bologna 20:30 → Oslo 23:15. Bagasjeoppbevaring på Bologna Centrale anbefales." }
+    ]}]
+  }
+];
+
+const TPILLS = {
+  1: {
+    "Fly DY 1876 (OSL → Malpensa)": { line:"Terravision buss", detail:"MXP T1 → Milano Centrale", time:"50 min", color:"#1D70B7", bg:"#E3F2FD", icon:"🚌", maps:"https://maps.google.com/maps/dir/Malpensa+Airport+Terminal+1/Milano+Centrale" },
+    "Buss Terravision → Milano Centrale": { line:"Italo 8983", detail:"Milano C. → Verona P.N.", time:"1 t 12 min", color:"#B2022F", bg:"#FDE7F0", icon:"🚆", maps:"https://maps.google.com/maps/dir/Milano+Centrale/Verona+Porta+Nuova" },
+    "Italo 8983 → Verona Porta Nuova": { line:"Gå / taxi", detail:"Verona P.N. → Residenza Catullo", time:"~10 min", color:"#1B5E20", bg:"#E8F5E9", icon:"🚶", maps:"https://maps.google.com/maps/dir/Verona+Porta+Nuova/Via+Catullo+3+Verona" }
+  },
+  3: {
+    "Italo-tog Verona → Firenze SMN": { line:"Trikk T2", detail:"Valfonda → Peretola Aeroporto", time:"23 min", color:"#EE7C0E", bg:"#FFF3E0", icon:"🚊", maps:"https://maps.google.com/maps/dir/Firenze+Santa+Maria+Novella/Firenze+Aeroporto+Peretola" },
+    "Trikk T2 → Firenze flyplass": { line:"Leiebil", detail:"FLR → villa (Toscana)", time:"~1 t", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps/dir/Firenze+Aeroporto/43.45080038752791,11.6831123828887" },
+    "Hent leiebil (Centauro)": { line:"Leiebil", detail:"FLR → villa", time:"~1 t", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps/dir/Firenze+Aeroporto/43.45080038752791,11.6831123828887" }
+  },
+  4: {
+    "Basseng & frokost på villaen": { line:"Leiebil", detail:"Villa → nærmeste landsby", time:"~15 min", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps?q=43.45080038752791,11.6831123828887" }
+  },
+  9: {
+    "Sjekk ut villa": { line:"Leiebil", detail:"Villa → Firenze flyplass", time:"~1 t", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps/dir/43.45080038752791,11.6831123828887/Firenze+Aeroporto" },
+    "Lever leiebil (Centauro FLR)": { line:"Trikk T2", detail:"Peretola → SMN sentrum", time:"23 min", color:"#EE7C0E", bg:"#FFF3E0", icon:"🚊", maps:"https://maps.google.com/maps/dir/Firenze+Aeroporto+Peretola/Firenze+Santa+Maria+Novella" }
+  },
+  10: {
+    "Janne & Ådne: tog til Bologna": { line:"Frecciarossa FR 9310", detail:"Firenze SMN → Bologna C.", time:"38 min", color:"#E2001A", bg:"#FDE7E9", icon:"🚄", maps:"https://maps.google.com/maps/dir/Firenze+Santa+Maria+Novella/Bologna+Centrale" }
+  }
+};
+
+const segs = [ {k:'thon',n:1}, {k:'catullo',n:2}, {k:'villa',n:6}, {k:'medici',n:1} ];
+
+const MAPD = {
+  milano:  { name:"Milano (transitt)", addr:"Malpensa T1 & Milano Centrale", maps:"https://maps.google.com/?q=Milano+Centrale", c:"city4", lat:45.4862, lng:9.2030 },
+  verona:  Object.assign({}, HOTELS.catullo, { lat:45.4438, lng:11.0000 }),
+  bologna: { name:"Bologna (transitt)", addr:"Bologna Centrale — hjemreise Janne & Ådne", maps:"https://maps.google.com/?q=Bologna+Centrale", c:"city4", lat:44.5058, lng:11.3431 },
+  firenze: Object.assign({}, HOTELS.medici, { lat:43.7715, lng:11.2630 }),
+  villa:   Object.assign({}, HOTELS.villa, { lat:43.4508, lng:11.68311 }),
+  perelli: { name:"Perelli Winery 🍷", addr:"Vinsmaking · 18. juni kl 17:00", note:"Booket smaking. ~15 min fra villaen. Utpekt sjåfør anbefales.", maps:"https://maps.app.goo.gl/9SkovPpFEE4FSeZh8", c:"perelli", lat:43.4804, lng:11.6029 }
+};
+const MAP_COLORS = { city1:"#B91C4A", city2:"#1B5E20", city3:"#E65100", city4:"#0D47A1", perelli:"#6B21A8" };
+const MAP_ORDER = ["milano","verona","firenze","villa","perelli","bologna"];
+const ROUTE = ["milano","verona","firenze","villa"];
+
+const RESTS = [
+  { sec:"Verona", c:"c1", cls:"verona", items:[
+    { n:"Osteria Sottoriva", type:"🍝 Tradisjonell osteria", desc:"Sjarmerende osteria under buegangene ved elven. Lokal klassiker.", order:"Bigoli con ragù d'asino, baccalà, et glass Valpolicella.", must:false, maps:"https://maps.google.com/?q=Osteria+Sottoriva+Verona" },
+    { n:"Antica Bottega del Vino", type:"🍷 Vin & klassisk kjøkken", desc:"Historisk vinbar med enorm Amarone-kjeller.", order:"Risotto all'Amarone, pastissada de caval. Book bord!", must:true, maps:"https://maps.google.com/?q=Antica+Bottega+del+Vino+Verona" },
+    { n:"Locanda 4 Cuochi", type:"🍴 Moderne bistro", desc:"Stilig, moderne tolkning av venetiansk mat.", order:"Dagens meny + naturvin. Reserver på forhånd.", must:false, maps:"https://maps.google.com/?q=Locanda+4+Cuochi+Verona" }
+  ]},
+  { sec:"Toscana / Chianti (nær villaen)", c:"c2", cls:"villa", items:[
+    { n:"Perelli Winery — vinsmaking", type:"🍷 Booket smaking · 18. jun 17:00", desc:"Booket vinsmaking torsdag 18. juni kl 17:00, ~15 min fra villaen.", order:"Smak husets viner — utpekt sjåfør anbefales. Ta med kontant til flaskekjøp.", must:true, maps:"https://maps.app.goo.gl/9SkovPpFEE4FSeZh8" },
+    { n:"Lokal agriturismo-middag", type:"🌾 Gårdsmat", desc:"Bestill bord på nærmeste agriturismo for autentisk toskansk husmannskost.", order:"Pici-pasta, wild boar (cinghiale) ragù, husets Chianti.", must:true, maps:"https://www.google.com/maps?q=43.45080038752791,11.6831123828887" },
+    { n:"Enoteca i Greve in Chianti", type:"🍇 Vinsmaking", desc:"Smak deg gjennom Chianti Classico i kildeområdet.", order:"Chianti Classico Riserva, pecorino + honning.", must:false, maps:"https://maps.google.com/?q=Enoteca+Greve+in+Chianti" }
+  ]},
+  { sec:"Firenze", c:"c3", cls:"firenze", items:[
+    { n:"All'Antico Vinaio", type:"🥪 Schiacciata-panini", desc:"Berømte gigant-panini. Perfekt rask lunsj.", order:"La Favolosa (med pecorino-krem). Forvent kø.", must:false, maps:"https://maps.google.com/?q=All'Antico+Vinaio+Firenze" },
+    { n:"Trattoria Mario", type:"🥩 Lunsj-trattoria", desc:"Familiedrevet siden 1953, kun lunsj, ingen reservasjon — del bord.", order:"Bistecca alla fiorentina, ribollita. Kun kontant.", must:false, maps:"https://maps.google.com/?q=Trattoria+Mario+Firenze" },
+    { n:"Trattoria Sostanza", type:"🍗 Historisk klassiker", desc:"Legendarisk «Il Troia» — smørkylling og biff.", order:"Petto di pollo al burro, bistecca. Må bookes!", must:true, maps:"https://maps.google.com/?q=Trattoria+Sostanza+Firenze" },
+    { n:"Gelateria dei Neri / Vivoli", type:"🍨 Gelato", desc:"To av byens beste gelaterier.", order:"Pistasj, ricotta-fiken, salt karamell.", must:false, maps:"https://maps.google.com/?q=Gelateria+dei+Neri+Firenze" }
+  ]}
+];
+
+const FLIGHTS = [
+  { who:"Hovedgruppe · ut", a:"OSL", ac:"Oslo Gardermoen", at:"07:30", b:"MXP", bc:"Milano Malpensa T1", bt:"10:10", meta:"DY 1876 · Norwegian · 2 t 40 min. Videre med buss + Italo-tog til Verona (se Transport)." },
+  { who:"Janne · ut", a:"—", ac:"Ankomst Firenze", at:"23:00", b:"FLR", bc:"Firenze flyplass", bt:"15. jun", meta:"Janne ankommer FLR mandag 15. juni kl 23:00 — hentes med bil fra villaen (~1 t hver vei)." },
+  { who:"Mamma & pappa · hjem", a:"FLR", ac:"Firenze", at:"09:25", b:"CPH", bc:"København", bt:"11:40", meta:"21. juni. Bytt i København." },
+  { who:"Mamma & pappa · hjem", a:"CPH", ac:"København", at:"13:50", b:"OSL", bc:"Oslo Gardermoen", bt:"15:00", meta:"21. juni · 1 t 10 min. ~2 t 10 min mellomlanding i CPH." },
+  { who:"Janne & Ådne · hjem", a:"BLQ", ac:"Bologna", at:"20:30", b:"OSL", bc:"Oslo Gardermoen", bt:"23:15", meta:"DY 1863 · 21. juni. Tog Firenze→Bologna 12:10–12:48 først (se Transport)." }
+];
+
+const LEGS = [
+  { route:"Thon Gardermoen → OSL", sub:"Hotell → flyplass", pill:"Shuttle / gå", pillBg:"#E8F5E9", pillC:"#1B5E20", pillBd:"#43A047", dur:"~10 min", maps:"https://maps.google.com/maps/dir/Thon+Hotel+Gardermoen/Oslo+Lufthavn", cost:"Inkl./gratis shuttle", steps:[
+    { st:"Thon Hotel Gardermoen", dt:"Ta hotellshuttle eller gå til terminal", exit:"Vær ute i god tid før 07:30" }
+  ]},
+  { route:"Malpensa → Verona", sub:"MXP T1 → Verona Porta Nuova", pill:"Buss + Italo", pillBg:"#FDE7F0", pillC:"#B2022F", pillBd:"#E879A0", dur:"~2 t 45 min", maps:"https://maps.google.com/maps/dir/Malpensa+Airport+T1/Verona+Porta+Nuova", cost:"Buss ~€10 + tog fra ~€20", steps:[
+    { st:"MXP T1 — ankomst", dt:"Gå til Coach Station (Floor -1), 300 m", exit:"~5 min · skiltet «Bus / Coach»" },
+    { st:"Buss Terravision 11:10", dt:"Direkte til Milano Centrale, 50 min", exit:"Ankomst ~12:00, Via G.B. Sammartini" },
+    { st:"Milano Centrale 12:35", dt:"Italo 8983 mot Venezia S. Lucia", exit:"~35 min bytte — ha billett klar" },
+    { st:"Verona Porta Nuova 13:47", dt:"Stopp underveis: Brescia 13:13, Desenzano 13:27", exit:"Gå/taxi til Residenza Catullo (~10 min)" }
+  ]},
+  { route:"Verona → Firenze", sub:"Verona P.N. → Firenze SMN", pill:"Italo (NTV)", pillBg:"#FDE7F0", pillC:"#B2022F", pillBd:"#E879A0", dur:"1 t 32 min", maps:"https://maps.google.com/maps/dir/Verona+Porta+Nuova/Firenze+Santa+Maria+Novella", cost:"Fra ~€20 (book tidlig)", steps:[
+    { st:"Verona P.N. 14:22", dt:"Italo/NTV direkte mot Firenze", exit:"Reservert plass" },
+    { st:"Firenze S.M. Novella 15:54", dt:"Sentralt i Firenze", exit:"150 m til trikkestopp Valfonda" }
+  ]},
+  { route:"Firenze SMN → Flyplass (FLR)", sub:"For henting av leiebil", pill:"Trikk T2", pillBg:"#FFF3E0", pillC:"#EE7C0E", pillBd:"#F39200", dur:"~27 min", maps:"https://maps.google.com/maps/dir/Firenze+Santa+Maria+Novella/Firenze+Aeroporto+Peretola", cost:"€1,70 enkeltbillett", steps:[
+    { st:"Valfonda — Stazione SMN", dt:"Trikk T2 mot Peretola Aeroporto", exit:"150 m fra SMN · 16:13" },
+    { st:"Peretola Aeroporto 16:36", dt:"12 stopp, 23 min", exit:"180 m gange til terminal" },
+    { st:"Firenze flyplass (FLR)", dt:"Centauro-shuttle utenfor terminalen", exit:"Hvert 10–15 min · pickup 17:30" }
+  ]},
+  { route:"Leiebil — Centauro", sub:"Henting 14. jun 17:30 · levering 20. jun 15:00", pill:"Bil 🚗", pillBg:"#FDF4FF", pillC:"#6B21A8", pillBd:"#9333EA", dur:"6 dager", maps:"https://maps.google.com/?q=Via+Francesco+Basili+23+Firenze", cost:"Per booking", steps:[
+    { st:"Centauro-kontor", dt:"Via Francesco Basili 23, 50127 Firenze", exit:"Åpent 08:00–23:00 · +39 06 8366 2959" },
+    { st:"Shuttle fra terminal", dt:"Vent ved Centauro-logo utenfor terminalen", exit:"Buss hvert 10–15 min" },
+    { st:"Levering 20. jun 15:00", dt:"Samme sted. Fyll bensin, ta bilder", exit:"Behold kvittering" }
+  ]},
+  { route:"Hjemreise — Firenze → Bologna", sub:"Janne & Ådne · 21. jun", pill:"Frecciarossa FR 9310", pillBg:"#FDE7E9", pillC:"#E2001A", pillBd:"#E2001A", dur:"38 min", maps:"https://maps.google.com/maps/dir/Firenze+Santa+Maria+Novella/Bologna+Centrale", cost:"Fra ~€15", steps:[
+    { st:"Firenze SMN 12:10", dt:"Frecciarossa FR 9310 mot Torino P.N.", exit:"Direkte" },
+    { st:"Bologna Centrale 12:48", dt:"Lang dag i Bologna før kveldsfly 20:30", exit:"Bruk bagasjeoppbevaring (KiPoint) på stasjonen" }
+  ]}
+];
+
+const SPECS = [
+  { h:"🍷 Amarone & Valpolicella", p:"Verona ligger midt i Valpolicella. Prøv Amarone (kraftig, tørket drue) og lillebroren Ripasso. Perfekt til risotto og kjøtt." },
+  { h:"🍇 Chianti Classico", p:"I Toscana er Chianti Classico (Gallo Nero / svart hane på flasken) kongen. Smak på vingård mellom Firenze og Siena." },
+  { h:"🥩 Bistecca alla Fiorentina", p:"Tykk T-bone fra Chianina-kveg, grillet rød i midten, kun salt. Selges per kilo — del på flere." },
+  { h:"🍝 Pici & wild boar", p:"Håndrullet tykk pasta (pici) med cinghiale (villsvin) ragù er signaturretten i Sør-Toscana." },
+  { h:"🍨 Gelato", p:"Se etter «gelato artigianale». Pistasj skal være matt grågrønn, ikke knallgrønn. Dondoli i San Gimignano er verdensberømt." },
+  { h:"☕ Caffè", p:"Cappuccino kun til frokost. Etter måltid: espresso. Bestill og drikk stående ved baren — billigst." }
+];
+</script>
+
+<script>
+/* ---------------- RENDER ---------------- */
+function sw(id, btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('v-'+id).classList.add('on');
+  window.scrollTo(0,0);
+  if(id==='map') setTimeout(initMap, 60);
+}
+
+function renderTL(){
+  const strip = document.getElementById('tl-strip');
+  strip.innerHTML = DAYS.map((d,i)=>`
+    <div class="tl-cell" id="cell-${i}" onclick="pick(${i})">
+      <div class="wd">${d.wd}</div>
+      <div class="dt">${d.d.replace('. jun','')}</div>
+      <div class="ic">${d.icon}</div>
+    </div>`).join('');
+  const hs = document.getElementById('hotel-strip');
+  hs.innerHTML = segs.map(s=>{
+    const h = HOTELS[s.k];
+    const col = getComputedStyle(document.documentElement).getPropertyValue('--'+h.city).trim();
+    return `<div class="hseg" style="background:${col}; width:${Math.max(64,s.n*30)}px" onclick="window.open('${h.maps}','_blank')">
+      <b>${h.name.split(' ').slice(0,2).join(' ')}</b><span>${s.n} natt${s.n>1?'er':''}</span></div>`;
+  }).join('');
+}
+
+function pick(i){
+  document.querySelectorAll('.tl-cell').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('cell-'+i).classList.add('sel');
+  const d = DAYS[i];
+  const h = d.hotel ? HOTELS[d.hotel] : null;
+  let badges = '';
+  if(d.checkin) badges += '<span class="badge b-in">✓ Innsjekk</span>';
+  if(d.checkout) badges += '<span class="badge b-out">↪ Utsjekk</span>';
+  const hotelBtn = h ? `<a class="hotel-btn" href="${h.maps}" target="_blank">📍 ${h.name}<span class="hb-sub">${h.dates}</span></a>` : '';
+  const catsHtml = d.cats.map(cat=>`
+    <div class="cat">
+      <div class="cat-hd">${cat.ic} ${cat.t}</div>
+      ${cat.items.map((it,idx,arr)=>{
+        const tp = (TPILLS[i]||{})[it.n];
+        const pill = (tp && idx<arr.length-1) ? `<a class="trans-pill" href="${tp.maps}" target="_blank" style="background:${tp.bg};color:${tp.color};border-color:${tp.color}55"><span>${tp.icon}</span><span>${tp.line} · ${tp.detail} · ${tp.time}</span></a>` : '';
+        return `<div class="act">
+            <div class="act-n">${it.a&&/[\d:]/.test(it.a)?'<span class=act-time>'+it.a+'</span> · ':''}${it.n}</div>
+            ${it.a&&!/[\d:]/.test(it.a)?'<div class="act-a">'+it.a+'</div>':''}
+            ${it.tip?'<div class="act-tip">💡 '+it.tip+'</div>':''}
+          </div>${pill}`;
+      }).join('')}
+    </div>`).join('');
+  document.getElementById('day-detail').innerHTML = `
+    <div class="day-head">
+      <div><div class="day-title">${d.wd} ${d.d}</div><div class="day-meta">${badges||'&nbsp;'}</div></div>
+      ${hotelBtn}
+    </div>
+    ${catsHtml}`;
+}
+
+let _map = null;
+function initMap(){
+  if(_map || typeof L === 'undefined') { if(_map) _map.invalidateSize(); return; }
+  _map = L.map('leaflet-map', { scrollWheelZoom:false }).setView([44.4, 11.1], 6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(_map);
+  // route line
+  const pts = ROUTE.map(k=>[MAPD[k].lat, MAPD[k].lng]);
+  L.polyline(pts, { color:'#B91C4A', weight:3, opacity:0.6, dashArray:'6,6' }).addTo(_map);
+  // markers
+  const bounds = [];
+  MAP_ORDER.forEach(key=>{
+    const d = MAPD[key];
+    const col = MAP_COLORS[d.c] || '#0D47A1';
+    bounds.push([d.lat, d.lng]);
+    const icon = L.divIcon({ className:'', iconSize:[22,22], iconAnchor:[11,11],
+      html:`<div style="width:22px;height:22px;border-radius:50%;background:${col};border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>` });
+    const popup = `<b>${d.name}</b><br>${d.addr}${d.dates?'<br>'+d.dates:''}${d.note?'<br><span style="color:#555">💡 '+d.note+'</span>':''}<br><a class="pop-link" href="${d.maps}" target="_blank">Åpne i Google Maps ↗</a>`;
+    L.marker([d.lat, d.lng], { icon }).addTo(_map).bindPopup(popup);
+  });
+  _map.fitBounds(bounds, { padding:[40,40] });
+}
+
+function renderFood(){
+  document.getElementById('v-food').innerHTML = RESTS.map(g=>`
+    <div class="sec-title">${g.sec}</div>
+    ${g.items.map(r=>`
+      <div class="rest-card ${r.must?'rest-must':''}">
+        ${r.must?'<div class="rest-must-badge">⭐ Book nå</div>':''}
+        <div class="rest-name">${r.n}</div>
+        <span class="rest-city ${g.c}">${g.sec}</span>
+        <div class="rest-type">${r.type}</div>
+        <div class="rest-desc">${r.desc}</div>
+        <div class="rest-order">💡 Bestill: ${r.order}</div>
+        <a class="rest-link" href="${r.maps}" target="_blank">📍 Google Maps ↗</a>
+      </div>`).join('')}`).join('');
+}
+
+function renderFly(){
+  document.getElementById('v-fly').innerHTML = FLIGHTS.map(f=>`
+    <div class="fly-card">
+      <div class="fly-who">${f.who}</div>
+      <div class="fly-route">
+        <div class="fly-ap"><div class="fly-code">${f.a}</div><div class="fly-city">${f.ac}</div><div class="fly-time">${f.at}</div></div>
+        <div class="fly-mid">✈️<div class="line"></div></div>
+        <div class="fly-ap"><div class="fly-code">${f.b}</div><div class="fly-city">${f.bc}</div><div class="fly-time">${f.bt}</div></div>
+      </div>
+      <div class="fly-meta">${f.meta}</div>
+    </div>`).join('');
+}
+
+function renderTrans(){
+  document.getElementById('v-trans').innerHTML = LEGS.map(l=>`
+    <div class="leg-card">
+      <div class="leg-header" onclick="tToggle(this)">
+        <div class="leg-left"><div class="leg-route">${l.route}</div><div class="leg-sub">${l.sub}</div></div>
+        <div class="leg-right">
+          <span class="mode-pill" style="background:${l.pillBg};color:${l.pillC};border:1px solid ${l.pillBd}">${l.pill}</span>
+          <span class="dur">${l.dur}</span><span class="leg-chev">▾</span>
+        </div>
+      </div>
+      <div class="leg-body"><div class="leg-inner">
+        ${l.steps.map((s,idx)=>`<div class="lstep">
+          <div class="lstep-line"><div class="lstep-dot"></div>${idx<l.steps.length-1?'<div class="lstep-conn"></div>':''}</div>
+          <div class="lstep-body"><div class="lstep-station">${s.st}</div><div class="lstep-detail">${s.dt}</div>${s.exit?'<span class="lstep-exit">'+s.exit+'</span>':''}</div>
+        </div>`).join('')}
+        <a class="maps-link" href="${l.maps}" target="_blank">Åpne i Google Maps ↗</a>
+        <div class="trans-cost">Pris: <b>${l.cost}</b></div>
+      </div></div>
+    </div>`).join('');
+}
+
+function tToggle(h){
+  h.nextElementSibling.classList.toggle('open');
+  const c = h.querySelector('.leg-chev'); if(c) c.classList.toggle('open');
+}
+
+function renderSpec(){
+  document.getElementById('v-spec').innerHTML = SPECS.map(s=>`
+    <div class="spec-card"><h3>${s.h}</h3><p>${s.p}</p></div>`).join('');
+}
+
+function renderPrac(){
+  document.getElementById('v-prac').innerHTML = `
+    <div class="prac-sec"><h3>✅ Før avreise</h3><ul class="chk">
+      <li>Bekreft dato for flyet ned + antall netter i Verona</li>
+      <li>Bekreft eksakt utsjekkstid på villaen (10:00 vs 16:00)</li>
+      <li>Pass gyldig + ev. EU-helsekort (EHIC)</li>
+      <li>Last ned billetter: Norwegian, Italo, Terravision, Trenitalia</li>
+      <li>Internasjonalt førerkort ikke nødvendig (EØS) — ha fysisk førerkort + kredittkort til leiebil</li>
+      <li>Avklar hvem som henter Janne på FLR 15. juni kl 23:00</li>
+    </ul></div>
+    <div class="prac-sec"><h3>🚗 Leiebil & kjøring</h3><ul>
+      <li>ZTL: Mange italienske bysentre har kjøreforbudssone (ZTL) med kamera/bot. Parker utenfor sentrum i Firenze/Siena.</li>
+      <li>Ta bilder/video av bilen ved henting og levering hos Centauro.</li>
+      <li>Fyll bensin før levering (full-til-full).</li>
+      <li>Motorvei (autostrada) er bompenger — ha kort/kontant klar.</li>
+    </ul></div>
+    <div class="prac-sec"><h3>💶 Penger</h3><ul>
+      <li>Euro. Kort fungerer nesten overalt, men ha kontant til små trattoriaer (f.eks. Trattoria Mario).</li>
+      <li>Restaurant: «coperto» (dekketøy-avgift) er normalt, tips ikke forventet.</li>
+    </ul></div>
+    <div class="prac-sec"><h3>🍽️ Mat & skikk</h3><ul>
+      <li>Book de markerte ⭐-restaurantene flere dager i forveien.</li>
+      <li>Middag serveres sjelden før 19:30–20:00.</li>
+      <li>Cappuccino kun til frokost; espresso etter måltider.</li>
+    </ul></div>
+    <div class="prac-sec"><h3>📱 Nyttige apper</h3><ul>
+      <li><b>Italo</b> / <b>Trenitalia</b> — togbilletter</li>
+      <li><b>Terravision</b> — flybuss Malpensa</li>
+      <li><b>at | Firenze</b> — trikk/buss-billetter</li>
+      <li><b>Google Maps</b> (last ned offline-kart for Toscana)</li>
+    </ul></div>
+    <div class="prac-sec"><h3>🌞 Timing & vær</h3><ul>
+      <li>Juni i Toscana: 25–32 °C, sol. Solkrem, hatt, vann.</li>
+      <li>Bookede attraksjoner (Uffizi, Siena Duomo) — kjøp tidsbillett på forhånd.</li>
+      <li>Janne & Ådne har ~7,5 t i Bologna 21. juni — perfekt for lunsj (tortellini!) og sentrum.</li>
+    </ul></div>`;
+}
+
+renderTL(); pick(0); renderFood(); renderFly(); renderTrans(); renderSpec(); renderPrac();
+</script>
+</body>
+</html>
