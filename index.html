@@ -289,14 +289,15 @@ const DAYS = [
       { n:"Val d'Orcia (valgfritt)", a:"sør", tip:"Vil dere lenger sør: Montalcino (Brunello), Pienza (pecorino), Montepulciano, Monticchiello. Se Steder-fanen." }
     ]}]
   },
-  { d:"18. jun", wd:"Tor", city:"city2", icon:"🍷", hotel:"villa", checkin:false, checkout:false,
+  { d:"18. jun", wd:"Tor", city:"city2", icon:"🍷", hotel:"villa", checkin:false, checkout:false, dnote:"🚗 Vær tilbake på villaen i god tid før kl 17:00 — bilene henter dere der til vinsmakingen.",
     cats:[
-      { ic:"🌾", t:"Nær villaen — Valdarno", items:[
-        { n:"Fattoria La Vialla", a:"Castiglion Fibocchi", tip:"Biodynamisk gård — vin, ost, olje. Gratis omvisning/smaking (book på forhånd)." },
-        { n:"Le Cantine de Il Borro", a:"San Giustino Valdarno", tip:"Ferragamos eksklusive vingård og restaurerte landsby. Lunsj eller smaking." }
+      { ic:"🏞️", t:"Dagsutflukt — Montepulciano & Val d'Orcia", items:[
+        { n:"Montepulciano", a:"Val d'Orcia", tip:"Høytliggende vakker by, kjent for Vino Nobile. Rusle i de bratte gatene og smak vin i en kjeller." },
+        { n:"Lunsj på Porta di Bacco", a:"Montepulciano", tip:"Osteria/ristorante i sentrum — book bord. Toskansk kjøkken + Vino Nobile. <a href='https://maps.app.goo.gl/Ltk4EVJJx8NfeAy16' target='_blank' style='color:var(--city4);font-weight:600'>📍 Maps ↗</a>", maps:"https://maps.app.goo.gl/Ltk4EVJJx8NfeAy16" },
+        { n:"Pienza / Monticchiello", a:"Val d'Orcia", tip:"På vei tilbake: Pienza (pecorino, idealby) eller bittelille Monticchiello. ~1 t 15 min kjøring hjem — sett av god tid før 17:00." }
       ]},
       { ic:"🍷", t:"Vinsmaking — booket!", items:[
-        { n:"Vinsmaking på Perelli Winery", a:"17:00", tip:"⭐ BOOKET kl 17:00. ~15 min kjøring fra villaen. Husk: utpekt sjåfør / lite smaking om dere kjører. Ta med kontant til ev. kjøp av flasker." }
+        { n:"Vinsmaking på Perelli Winery", a:"17:00", tip:"⭐ BOOKET kl 17:00. To biler er booket for å hente og bringe hele gruppen fra/til villaen — så alle kan smake fritt. Ta med kontant til ev. kjøp av flasker." }
       ]}
     ]
   },
@@ -344,6 +345,10 @@ const TPILLS = {
   3: {
     "Basseng & frokost på villaen": { line:"Leiebil", detail:"Villa → nærmeste landsby", time:"~15 min", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps?q=43.45080038752791,11.6831123828887" }
   },
+  6: {
+    "Montepulciano": { line:"Gå", detail:"Parkering → sentrum / lunsj", time:"~5 min", color:"#1B5E20", bg:"#E8F5E9", icon:"🚶", maps:"https://www.google.com/maps/search/?api=1&query=Montepulciano" },
+    "Lunsj på Porta di Bacco": { line:"Leiebil", detail:"Montepulciano → Pienza/Monticchiello", time:"~20 min", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps/dir/Montepulciano/Pienza" }
+  },
   8: {
     "Sjekk ut villa": { line:"Leiebil", detail:"Villa → Firenze flyplass", time:"~1 t", color:"#6B21A8", bg:"#FDF4FF", icon:"🚗", maps:"https://www.google.com/maps/dir/43.45080038752791,11.6831123828887/Firenze+Aeroporto" },
     "Lever leiebil (Centauro FLR)": { line:"Trikk T2", detail:"Peretola → SMN sentrum", time:"23 min", color:"#EE7C0E", bg:"#FFF3E0", icon:"🚊", maps:"https://maps.google.com/maps/dir/Firenze+Aeroporto+Peretola/Firenze+Santa+Maria+Novella" }
@@ -377,10 +382,7 @@ const POI_AREAS = [
     { n:"Radda in Chianti", lat:43.4870, lng:11.3747, d:"Sjarmerende middelalderlandsby, hjertet av Chianti Classico." }
   ]},
   { area:"Nær villaen — Valdarno", color:"#1B5E20", day:"Tips: 15. & 18. juni", items:[
-    { n:"Perelli Winery", lat:43.4804, lng:11.6029, d:"⭐ Booket vinsmaking 18. juni kl 17:00. ~15 min fra villaen.", maps:"https://maps.app.goo.gl/9SkovPpFEE4FSeZh8" },
-    { n:"Fattoria Migliarina", lat:43.4902, lng:11.6313, d:"Lokal gård/vingård nær Bucine." },
-    { n:"Le Cantine de Il Borro", lat:43.5393, lng:11.7163, d:"Ferragamos eksklusive vingård & restaurerte landsby, San Giustino." },
-    { n:"Fattoria La Vialla", lat:43.5288, lng:11.7801, d:"Biodynamisk gård — vin, ost, olje. Gratis omvisning/smaking (book)." },
+    { n:"Perelli Winery", lat:43.4804, lng:11.6029, d:"⭐ Booket vinsmaking 18. juni kl 17:00. To biler henter og bringer fra villaen (allerede booket).", maps:"https://maps.app.goo.gl/9SkovPpFEE4FSeZh8" },
     { n:"Pieve a Presciano", lat:43.4508, lng:11.6711, d:"Liten landsby like ved villaen." }
   ]},
   { area:"Valdelsa & vest", color:"#00695C", day:"Tips: 19. juni", items:[
@@ -409,7 +411,7 @@ const RESTS = [
     { n:"Locanda 4 Cuochi", type:"🍴 Moderne bistro", desc:"Stilig, moderne tolkning av venetiansk mat.", order:"Dagens meny + naturvin. Reserver på forhånd.", must:false, maps:"https://maps.google.com/?q=Locanda+4+Cuochi+Verona" }
   ]},
   { sec:"Toscana / Chianti (nær villaen)", c:"c2", cls:"villa", items:[
-    { n:"Perelli Winery — vinsmaking", type:"🍷 Booket smaking · 18. jun 17:00", desc:"Booket vinsmaking torsdag 18. juni kl 17:00, ~15 min fra villaen.", order:"Smak husets viner — utpekt sjåfør anbefales. Ta med kontant til flaskekjøp.", must:true, maps:"https://maps.app.goo.gl/9SkovPpFEE4FSeZh8" },
+    { n:"Perelli Winery — vinsmaking", type:"🍷 Booket smaking · 18. jun 17:00", desc:"Booket vinsmaking torsdag 18. juni kl 17:00.", order:"To biler er booket for henting/bringing fra villaen — alle kan smake fritt. Ta med kontant til flaskekjøp.", must:true, maps:"https://maps.app.goo.gl/9SkovPpFEE4FSeZh8" },
     { n:"Lokal agriturismo-middag", type:"🌾 Gårdsmat", desc:"Bestill bord på nærmeste agriturismo for autentisk toskansk husmannskost.", order:"Pici-pasta, wild boar (cinghiale) ragù, husets Chianti.", must:true, maps:"https://www.google.com/maps?q=43.45080038752791,11.6831123828887" },
     { n:"Enoteca i Greve in Chianti", type:"🍇 Vinsmaking", desc:"Smak deg gjennom Chianti Classico i kildeområdet.", order:"Chianti Classico Riserva, pecorino + honning.", must:false, maps:"https://maps.google.com/?q=Enoteca+Greve+in+Chianti" }
   ]},
@@ -644,7 +646,7 @@ function renderPrac(){
     <div class="prac-sec"><h3>✅ Før avreise</h3><ul class="chk">
       <li>Avreise bekreftet: lør 13. juni (DY 1876) · 1 natt i Verona (13.→14.)</li>
       <li>Bekreft eksakt utsjekkstid på villaen (10:00 vs 16:00)</li>
-      <li>Avtal utpekt sjåfør til vinsmakingen på Perelli 18. juni kl 17:00</li>
+      <li>Vinsmaking Perelli 18. juni 17:00 — to biler henter/bringer fra villaen (booket)</li>
       <li>Pass gyldig + ev. EU-helsekort (EHIC)</li>
       <li>Last ned billetter: Norwegian, Italo, Terravision, Trenitalia</li>
       <li>Internasjonalt førerkort ikke nødvendig (EØS) — ha fysisk førerkort + kredittkort til leiebil</li>
