@@ -374,31 +374,32 @@ const ROUTE = ["milano","verona","firenze","villa"];
 /* Lagrede steder å besøke — gruppert etter område */
 const POI_AREAS = [
   { area:"Chianti Classico", color:"#6A1B9A", day:"Tips: 16. juni", items:[
-    { n:"Antinori nel Chianti Classico", lat:43.6128, lng:11.1938, d:"Spektakulær moderne vingård i åssiden — arkitektur + booket smaking." },
-    { n:"Greve in Chianti", lat:43.6069, lng:11.3320, d:"Trekantet torg, Falorni-vinbar, slakter og vinbutikker." },
-    { n:"Antica Macelleria Cecchini", lat:43.5445, lng:11.3164, d:"Dario Cecchini i Panzano — Italias mest kjente slakter. Book lunsj." },
-    { n:"Radda in Chianti", lat:43.4870, lng:11.3747, d:"Sjarmerende middelalderlandsby, hjertet av Chianti Classico." }
+    { n:"Antinori nel Chianti Classico", lat:43.6128, lng:11.1938, d:"Marchesi Antinoris spektakulære vingård i Bargino, delvis bygget inn i åssiden og åpnet i 2012. Her får dere arkitektur, kjeller, vinbutikk, smakinger og restauranten Rinuccio 1180 på ett sted. Antinori anbefaler reservasjon — inngang er ikke garantert uten booking." },
+    { n:"Greve in Chianti", lat:43.6069, lng:11.3320, d:"Klassisk markedsby i Chianti med trekantede Piazza Matteotti som sentrum, portikoer, vinbutikker og slaktere. Bra base for en rolig kaffe, Falorni/vinbar-stopp og eventuell avstikker til Montefioralle. Parker utenfor sentrum og gå inn." },
+    { n:"Antica Macelleria Cecchini", lat:43.5445, lng:11.3164, d:"Dario Cecchinis berømte slakteri i Panzano, med åtte generasjoner bak seg og en tydelig 'nose to tail'-filosofi. Det finnes både butikk og flere matopplevelser/restauranter knyttet til Cecchini. Book måltid god tid i forveien — butikken kan være enklere å stikke innom." },
+    { n:"Radda in Chianti", lat:43.4870, lng:11.3747, d:"Ridge-top middelalderby og historisk hovedstad for Lega del Chianti. Se Piazza Ferrucci, Palazzo del Podestà og byportene Porta Fiorentina / Porta Valdarnese. Kompakt, men bratt — fint som et sent ettermiddagsstopp etter Greve/Panzano." }
   ]},
   { area:"Nær villaen — Valdarno", color:"#1B5E20", day:"Tips: 15. & 18. juni", items:[
-    { n:"Perelli Winery", lat:43.4804, lng:11.6029, d:"⭐ Booket vinsmaking 18. juni kl 17:00. To biler henter og bringer fra villaen (allerede booket).", maps:"https://maps.app.goo.gl/9SkovPpFEE4FSeZh8" },
-    { n:"Pieve a Presciano", lat:43.4508, lng:11.6711, d:"Liten landsby like ved villaen." }
+    { n:"Perelli Winery", lat:43.4804, lng:11.6029, d:"Familiedrevet landbrukseiendom i Bucine/Arezzo-området, mellom Arezzo, Siena og Firenze, med vin, olivenolje og smakinger som gjerne inkluderer kjeller/vinmark og spekemat/ost. ⭐ Dere har booket vinsmaking 18. juni kl 17:00, og to biler henter og bringer fra villaen.", maps:"https://maps.app.goo.gl/9SkovPpFEE4FSeZh8" },
+    { n:"Pieve a Presciano", lat:43.4508, lng:11.6711, d:"Lite, stille landsby-/pieve-stopp rett ved villaen i Valdarno. Mer en rolig landskaps- og nærområdestopp enn en stor attraksjon, så bruk det for en kort kaffe, rusletur eller orientering første dag. Sjekk lokalt om kirken faktisk er åpen før dere planlegger det som hovedmål." }
   ]},
   { area:"Valdelsa & vest", color:"#00695C", day:"Tips: 19. juni", items:[
-    { n:"San Gimignano", lat:43.4678, lng:11.0432, d:"Tårnbyen (UNESCO) + Dondoli-gelato på Piazza della Cisterna." },
-    { n:"Certaldo", lat:43.5477, lng:11.0410, d:"Boccaccios røde mursteinsby — kabelbane til Certaldo Alto.", maps:"https://maps.app.goo.gl/jDimhKzkqzhhzVfQ7" },
-    { n:"Castelfalfi", lat:43.5474, lng:10.8573, d:"Middelalderlandsby/golfresort i bølgende åser." },
-    { n:"Sentierelsa Trail", lat:43.4199, lng:11.1324, d:"Vakker elvegjuv-tur med fossefall og badekulper." }
+    { n:"San Gimignano", lat:43.4678, lng:11.0432, d:"UNESCO-byen kjent for middelaldertårnene og et kompakt historisk sentrum rundt Piazza della Cisterna og Piazza del Duomo. Gå tidlig eller sent for mindre trengsel, parker utenfor murene, og ta gelato hos Dondoli hvis dere tåler kø." },
+    { n:"Certaldo", lat:43.5477, lng:11.0410, d:"Boccaccios by, med Certaldo Alto som en rød mursteinsby på høyden over den moderne byen. Ta kabelbanen fra Piazza Boccaccio opp til gamlebyen; se Palazzo Pretorio, Casa di Boccaccio og Via Boccaccio. Kjent lokalt for løken fra Certaldo og Mercantia-festivalen i juli.", maps:"https://maps.app.goo.gl/jDimhKzkqzhhzVfQ7" },
+    { n:"Castelfalfi", lat:43.5474, lng:10.8573, d:"Restaurert toskansk borgo og resort i Montaione, med middelalderlandsby, slott/kirke, hotell, restauranter, spa, vingård og olivenolje. Mange opplevelser er resort-aktiviteter (vin, olje, trøffel, falkejakt m.m.), så sjekk hva som er åpent for ikke-gjester før dere kjører dit." },
+    { n:"Sentierelsa Trail", lat:43.4199, lng:11.1324, d:"Natursti langs elven Elsa ved Colle di Val d'Elsa, kjent for turkist vann, små fossefall, broer og skyggefulle partier. Best med gode sko og ikke rett etter kraftig regn. Sjekk lokale forhold før dere går, og ta badetøy hvis været er varmt." }
   ]},
   { area:"Byer & Val d'Orcia (sør)", color:"#0D47A1", day:"Tips: 17. juni / egen dag", items:[
-    { n:"Siena", lat:43.1672, lng:11.4676, d:"Piazza del Campo & Duomo — en av Italias vakreste byer." },
-    { n:"Cortona", lat:43.2753, lng:11.9851, d:"Åsby (Under the Tuscan Sun) med utsikt over Valdichiana." },
-    { n:"Montalcino", lat:43.0576, lng:11.4903, d:"Brunello-vin, festning, porten til Val d'Orcia." },
-    { n:"Pienza", lat:43.0765, lng:11.6789, d:"Renessanseidealby, berømt pecorino-ost." },
-    { n:"Monticchiello", lat:43.0682, lng:11.7256, d:"Bitteliten murbylandsby, klassisk Val d'Orcia." },
-    { n:"Montepulciano", lat:43.0945, lng:11.7827, d:"Vino Nobile, høytliggende vakker by." }
+    { n:"Siena", lat:43.1672, lng:11.4676, d:"UNESCO-historisk sentrum med skjellformede Piazza del Campo, Palazzo Pubblico, Torre del Mangia og den stripete marmorkatedralen. Palio går 2. juli og 16. august, så dere slipper Palio-kaos i juni. Book Duomo/museum om dere vil inn, og parker utenfor muren." },
+    { n:"Cortona", lat:43.2753, lng:11.9851, d:"Bratt etruskisk åsby over Valdichiana, med MAEC-museet, Diocesan Museum, katedralen, Fortezza del Girifalco og Le Celle-eremitten i nærheten. Vakker, men mye oppoverbakke — planlegg parkering og ta gode sko." },
+    { n:"Montalcino", lat:43.0576, lng:11.4903, d:"Brunello di Montalcino-by med festning fra 1300-tallet, Piazza del Popolo og vinbutikker/smakerom. Kombineres fint med Sant'Antimo-klosteret hvis dere gjør en hel Val d'Orcia-dag. Seriøse Brunello-smakinger bør bookes." },
+    { n:"Pienza", lat:43.0765, lng:11.6789, d:"Renessanse-'idealbyen' som pave Pius II fikk ombygget fra Corsignano på 1400-tallet. UNESCO-sentrum med Piazza Pio II, katedralen, Palazzo Piccolomini og utsikt over Val d'Orcia. Også pecorino-by — kjøp ost hvis dere stopper." },
+    { n:"Monticchiello", lat:43.0682, lng:11.7256, d:"Liten befestet middelalderlandsby i Pienza kommune, med bymurer, tårn og kirken Santi Leonardo e Cristoforo. Kjent for Teatro Povero, et lokalt folketeater. Best som rolig stopp mellom Pienza og Montepulciano, ikke som heldagsmål." },
+    { n:"Montepulciano", lat:43.0945, lng:11.7827, d:"Høytliggende by mellom Val d'Orcia og Val di Chiana, kjent for Vino Nobile di Montepulciano. Hovedgaten klatrer fra Porta al Prato til Piazza Grande; se Palazzo Comunale, katedralen og San Biagio nedenfor murene. Byen er bratt — parker smart og book kjellersmakinger." },
+    { n:"Porta di Bacco", lat:43.0968, lng:11.7852, d:"Osteria/enoteca i Montepulciano ved Via di Gracciano nel Corso 94, med lokale råvarer, vinkjeller/enoteca og fokus på Vino Nobile. Passer godt som lunsj før dere rusler opp hovedgaten. Reserver bord direkte — dere har denne som lunsjidé 18. juni.", maps:"https://maps.app.goo.gl/Ltk4EVJJx8NfeAy16" }
   ]},
   { area:"Firenze", color:"#E65100", day:"20.–21. juni", items:[
-    { n:"All'Antico Vinaio", lat:43.7685, lng:11.2574, d:"Berømte schiacciata-panini i Via dei Neri. Rask, billig, nydelig." }
+    { n:"All'Antico Vinaio", lat:43.7685, lng:11.2574, d:"Firenze-født schiacciata-sandwich-institusjon med flere avdelinger i byen (bl.a. Via dei Neri og nær SMN). Berømt for enorme, fyldige panini og lange køer. Bruk online pickup/AV Express hvis tilgjengelig, eller gå utenom peak lunsj." }
   ]}
 ];
 
