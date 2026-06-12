@@ -239,7 +239,7 @@ const DAYS = [
     cats:[
       { ic:"✈️", t:"Reisedag — Oslo → Verona", items:[
         { n:"Fly DY 1876 (OSL → Malpensa)", a:"07:30 → 10:10 · T1", tip:"Norwegian, 2 t 40 min. Vær på MXP T1 ankomst rundt 10:10–11:00." },
-        { n:"Buss Terravision → Milano Centrale", a:"11:10 · 50 min direkte", tip:"Fra MXP T1 Coach Station (Floor -1). Billetten skal være gyldig på flere avganger: 10:40, 10:50, 11:10, 11:20, 11:40 og 11:50." },
+        { n:"Malpensa Express → Milano Centrale", a:"prioritet: 10:41 / 11:11 / 11:41", tip:"Prioriter tog fra Malpensa til Milano Centrale: 10:41→11:37, 11:11→12:07 eller 11:41→12:37. Terravision-buss er backup, og billetten skal være gyldig på 10:40, 10:50, 11:10, 11:20, 11:40 og 11:50." },
         { n:"Tog Milano Centrale → Verona Porta Nuova", a:"12:45 → 13:58", tip:"13/06/2026. Litt bedre buffer etter bussen. Billetten kan endres inntil 1 time etter avgang hvis fly/buss blir forsinket." },
         { n:"Innsjekk Residenza Catullo", a:"Via Catullo 3", tip:"Legg fra dere bagasjen, så ut i gamlebyen. Aperitivo på Piazza delle Erbe!" }
       ]},
@@ -330,8 +330,8 @@ const DAYS = [
 
 const TPILLS = {
   1: {
-    "Fly DY 1876 (OSL → Malpensa)": { line:"Terravision buss", detail:"MXP T1 → Milano Centrale", time:"50 min", color:"#1D70B7", bg:"#E3F2FD", icon:"🚌", maps:"https://maps.google.com/maps/dir/Malpensa+Airport+Terminal+1/Milano+Centrale" },
-    "Buss Terravision → Milano Centrale": { line:"Tog", detail:"Milano C. → Verona P.N.", time:"12:45–13:58", color:"#B2022F", bg:"#FDE7F0", icon:"🚆", maps:"https://maps.google.com/maps/dir/Milano+Centrale/Verona+Porta+Nuova" },
+    "Fly DY 1876 (OSL → Malpensa)": { line:"Malpensa Express", detail:"MXP T1 → Milano Centrale", time:"10:41/11:11/11:41", color:"#D5001C", bg:"#FDE7E9", icon:"🚆", maps:"https://maps.google.com/maps/dir/Malpensa+Airport+Terminal+1/Milano+Centrale" },
+    "Malpensa Express → Milano Centrale": { line:"Tog", detail:"Milano C. → Verona P.N.", time:"12:45–13:58", color:"#B2022F", bg:"#FDE7F0", icon:"🚆", maps:"https://maps.google.com/maps/dir/Milano+Centrale/Verona+Porta+Nuova" },
     "Tog Milano Centrale → Verona Porta Nuova": { line:"Gå / taxi", detail:"Verona P.N. → Residenza Catullo", time:"~10 min", color:"#1B5E20", bg:"#E8F5E9", icon:"🚶", maps:"https://maps.google.com/maps/dir/Verona+Porta+Nuova/Via+Catullo+3+Verona" }
   },
   2: {
@@ -434,9 +434,9 @@ const LEGS = [
   { route:"Thon Gardermoen → OSL", sub:"Hotell → flyplass", pill:"Shuttle / gå", pillBg:"#E8F5E9", pillC:"#1B5E20", pillBd:"#43A047", dur:"~10 min", maps:"https://maps.google.com/maps/dir/Thon+Hotel+Gardermoen/Oslo+Lufthavn", cost:"Inkl./gratis shuttle", steps:[
     { st:"Thon Hotel Gardermoen", dt:"Ta hotellshuttle eller gå til terminal", exit:"Vær ute i god tid før 07:30" }
   ]},
-  { route:"Malpensa → Verona", sub:"MXP T1 → Verona Porta Nuova", pill:"Buss + Italo", pillBg:"#FDE7F0", pillC:"#B2022F", pillBd:"#E879A0", dur:"~2 t 45 min", maps:"https://maps.google.com/maps/dir/Malpensa+Airport+T1/Verona+Porta+Nuova", cost:"Buss ~€10 + tog fra ~€20", steps:[
-    { st:"MXP T1 — ankomst", dt:"Gå til Coach Station (Floor -1), 300 m", exit:"~5 min · skiltet «Bus / Coach»" },
-    { st:"Buss Terravision", dt:"Direkte til Milano Centrale, ca. 50 min", exit:"Billetten skal gjelde flere avganger: 10:40, 10:50, 11:10, 11:20, 11:40 og 11:50. Velg første som passer etter bagasje/ankomst." },
+  { route:"Malpensa → Verona", sub:"MXP T1 → Verona Porta Nuova", pill:"Malpensa Express + tog", pillBg:"#FDE7F0", pillC:"#B2022F", pillBd:"#E879A0", dur:"~3 t", maps:"https://maps.google.com/maps/dir/Malpensa+Airport+T1/Verona+Porta+Nuova", cost:"Malpensa Express + tog fra ~€20", steps:[
+    { st:"MXP T1 — ankomst", dt:"Følg skilt til togstasjonen / Malpensa Express", exit:"Prioritet er tog til Milano Centrale, ikke buss" },
+    { st:"Malpensa Express", dt:"Prioriter avganger: 10:41→11:37, 11:11→12:07 eller 11:41→12:37", exit:"Backup: Terravision-buss 10:40, 10:50, 11:10, 11:20, 11:40, 11:50 — billetten skal være gyldig på alle disse." },
     { st:"Milano Centrale 12:45", dt:"Tog til Verona Porta Nuova", exit:"~45 min bytte fra bussankomst. Billetten kan endres inntil 1 time etter avgang ved forsinkelser." },
     { st:"Verona Porta Nuova 13:58", dt:"Ankomst Verona", exit:"Gå/taxi til Residenza Catullo (~10 min)" }
   ]},
