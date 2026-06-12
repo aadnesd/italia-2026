@@ -239,7 +239,7 @@ const DAYS = [
     cats:[
       { ic:"✈️", t:"Reisedag — Oslo → Verona", items:[
         { n:"Fly DY 1876 (OSL → Malpensa)", a:"07:30 → 10:10 · T1", tip:"Norwegian, 2 t 40 min. Vær på MXP T1 ankomst rundt 10:10–11:00." },
-        { n:"Buss Terravision → Milano Centrale", a:"11:10 · 50 min direkte", tip:"Fra MXP T1 Coach Station (Floor -1). Kjøp billett på forhånd via Terravision-appen." },
+        { n:"Buss Terravision → Milano Centrale", a:"11:10 · 50 min direkte", tip:"Fra MXP T1 Coach Station (Floor -1). Billetten skal være gyldig på flere avganger: 10:40, 10:50, 11:10, 11:20, 11:40 og 11:50." },
         { n:"Tog Milano Centrale → Verona Porta Nuova", a:"12:45 → 13:58", tip:"13/06/2026. Litt bedre buffer etter bussen. Billetten kan endres inntil 1 time etter avgang hvis fly/buss blir forsinket." },
         { n:"Innsjekk Residenza Catullo", a:"Via Catullo 3", tip:"Legg fra dere bagasjen, så ut i gamlebyen. Aperitivo på Piazza delle Erbe!" }
       ]},
@@ -436,7 +436,7 @@ const LEGS = [
   ]},
   { route:"Malpensa → Verona", sub:"MXP T1 → Verona Porta Nuova", pill:"Buss + Italo", pillBg:"#FDE7F0", pillC:"#B2022F", pillBd:"#E879A0", dur:"~2 t 45 min", maps:"https://maps.google.com/maps/dir/Malpensa+Airport+T1/Verona+Porta+Nuova", cost:"Buss ~€10 + tog fra ~€20", steps:[
     { st:"MXP T1 — ankomst", dt:"Gå til Coach Station (Floor -1), 300 m", exit:"~5 min · skiltet «Bus / Coach»" },
-    { st:"Buss Terravision 11:10", dt:"Direkte til Milano Centrale, 50 min", exit:"Ankomst ~12:00, Via G.B. Sammartini" },
+    { st:"Buss Terravision", dt:"Direkte til Milano Centrale, ca. 50 min", exit:"Billetten skal gjelde flere avganger: 10:40, 10:50, 11:10, 11:20, 11:40 og 11:50. Velg første som passer etter bagasje/ankomst." },
     { st:"Milano Centrale 12:45", dt:"Tog til Verona Porta Nuova", exit:"~45 min bytte fra bussankomst. Billetten kan endres inntil 1 time etter avgang ved forsinkelser." },
     { st:"Verona Porta Nuova 13:58", dt:"Ankomst Verona", exit:"Gå/taxi til Residenza Catullo (~10 min)" }
   ]},
